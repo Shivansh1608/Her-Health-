@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Buy Medicines | HerHealth+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <!-- FONT IMPORTS & STYLESHEETS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    /* 
+    ============================================
+    SHARED STYLES (HEADER, FOOTER, ETC.)
+    ============================================
+    */
+    :root {
+      --clr-primary: #E60073;
+      --clr-primary-light: #FF4DA6;
+      --clr-secondary: #6A1B9A;
+      --clr-bg: #FFF5F7;
+      --clr-surface: #FFFFFF;
+      --clr-text: #4A4A4A;
+      --clr-heading: #333333;
+      --ff-heading: 'Montserrat', sans-serif;
+      --ff-body: 'Poppins', sans-serif;
+      --shadow-md: 0 8px 25px rgba(230, 0, 115, 0.15);
+      --border-radius: 12px;
+      --transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--ff-body);
+      background-color: var(--clr-bg);
+      color: var(--clr-text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    @keyframes slideUpFadeIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    .animated-item { animation: slideUpFadeIn 0.6s ease-out both; }
+    .primary-header { background: linear-gradient(90deg, var(--clr-secondary), var(--clr-primary)); color: white; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .primary-header h1 { font-family: var(--ff-heading); font-size: 1.8rem; }
+    .main-nav a { margin-left: 25px; color: white; text-decoration: none; font-weight: 500; }
+    .primary-footer { text-align: center; margin-top: 5rem; padding: 2rem; color: #888; background: transparent; }
+    .form-control { padding: 12px 15px; border: 2px solid #EAEAEA; border-radius: 8px; font-size: 1rem; transition: var(--transition); }
+    .form-control:focus { border-color: var(--clr-primary); box-shadow: 0 0 0 4px rgba(230, 0, 115, 0.1); outline: none; }
+
+    /* 
+    ============================================
+    14. PHARMACY / E-COMMERCE STYLES (IMAGELESS)
+    ============================================
+    */
+
+    /* --- Filter Sidebar --- */
+    .filter-sidebar {
+      background: var(--clr-surface);
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+    }
+    .filter-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 0.75rem 1rem;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+    .filter-btn:hover { background-color: var(--clr-bg); color: var(--clr-primary); }
+    .filter-btn.active { background-color: var(--clr-primary); color: white; }
+
+    /* --- Product Card (No Image) --- */
+    .product-card {
+      background: var(--clr-surface);
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 1.5rem; /* Added padding since there's no image */
+    }
+    .product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+    .product-category {
+      background-color: var(--clr-secondary);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 50px;
+      display: inline-block;
+    }
+    .product-dates {
+      font-size: 0.8rem;
+      color: #888;
+    }
+    .product-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--clr-primary);
+    }
+    .add-to-cart-btn {
+      background: var(--clr-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .add-to-cart-btn:hover { background-color: var(--clr-primary-light); transform: scale(1.05); }
+
+    /* --- Floating Cart Button --- */
+    .floating-cart-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(45deg, var(--clr-secondary), var(--clr-primary));
+      color: white;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      box-shadow: var(--shadow-lg);
+      cursor: pointer;
+      z-index: 1000;
+      transition: transform 0.2s ease;
+    }
+    .floating-cart-btn:hover { transform: scale(1.1); }
+    .cart-item-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ffeb3b;
+      color: black;
+      font-size: 0.8rem;
+      font-weight: 700;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      border: 2px solid white;
+    }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+    .floating-cart-btn.shake { animation: shake 0.4s ease; }
+
+    /* --- Side Cart Panel (Offcanvas) --- */
+    .side-cart-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      max-width: 400px;
+      height: 100vh;
+      background: white;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+      transform: translateX(100%);
+      transition: transform 0.4s ease-in-out;
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+    }
+    .side-cart-panel.is-open { transform: translateX(0); }
+    .cart-header { padding: 1rem 1.5rem; border-bottom: 1px solid #eee; }
+    .cart-body { flex-grow: 1; overflow-y: auto; padding: 1.5rem; }
+    .cart-item { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center; } /* Adjusted alignment */
+    .cart-item-details { flex-grow: 1; }
+    .cart-footer { padding: 1.5rem; border-top: 1px solid #eee; background: var(--clr-bg); }
+  </style>
+</head>
+<body>
+
+  <header class="primary-header animated-item">
+    <h1>HerHealth+ Pharmacy</h1>
+    <nav class="main-nav">
+      <a href="index.html">⬅ Back to Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="container my-5">
+    <div class="row g-5">
+      <!-- Left Column: Filters -->
+      <div class="col-lg-3 animated-item" style="animation-delay: 0.2s;">
+        <div class="filter-sidebar sticky-top">
+          <h5 class="mb-3" style="font-family: var(--ff-heading);">Categories</h5>
+          <div id="filter-container">
+            <!-- Filter buttons will be inserted here by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Products -->
+      <div class="col-lg-9">
+        <div class="mb-4 animated-item" style="animation-delay: 0.3s;">
+          <input type="text" id="searchInput" class="form-control p-3" placeholder="Search for medicines, supplements, and more..." />
+        </div>
+        <div class="row g-4" id="productList">
+          <!-- Product cards will be inserted here by JS -->
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Floating Cart Button -->
+  <div id="cart-btn" class="floating-cart-btn">
+    <i class="fas fa-shopping-cart"></i>
+    <span id="cart-item-count" class="cart-item-count">0</span>
+  </div>
+
+  <!-- Side Cart Panel -->
+  <div id="side-cart" class="side-cart-panel">
+    <div class="cart-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0" style="font-family: var(--ff-heading);">Your Cart</h5>
+      <button id="close-cart-btn" class="btn-close"></button>
+    </div>
+    <div class="cart-body" id="cart-items-container">
+      <!-- Cart items will be inserted here -->
+    </div>
+    <div class="cart-footer">
+      <div class="d-flex justify-content-between fs-5 fw-bold mb-3">
+        <span>Total:</span>
+        <span id="cart-total">₹0.00</span>
+      </div>
+      <button class="btn btn-lg w-100" style="background: linear-gradient(90deg, var(--clr-primary), var(--clr-primary-light)); color: white;">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <footer class="primary-footer">
+    © 2025 HerHealth+. All rights reserved.
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- DATA ---
+      const products = [
+        // General Wellness
+        { id: 1, name: "Paracetamol 500mg", price: 20, description: "For fever and pain relief.", category: "General Wellness", mfg: "2023-11-01", exp: "2025-10-31" },
+        { id: 2, name: "Ibuprofen 400mg", price: 35, description: "Painkiller & anti-inflammatory.", category: "General Wellness", mfg: "2023-09-01", exp: "2025-08-31" },
+        { id: 3, name: "Antacid Gel Syrup", price: 85, description: "Relief from acidity & indigestion.", category: "General Wellness", mfg: "2024-01-15", exp: "2026-01-14" },
+        // Vitamins & Supplements
+        { id: 4, name: "Folic Acid Tablets (90)", price: 145, description: "Essential for women’s health.", category: "Vitamins & Supplements", mfg: "2023-12-01", exp: "2025-11-30" },
+        { id: 5, name: "Women's Multivitamins (60)", price: 460, description: "Daily immune and energy support.", category: "Vitamins & Supplements", mfg: "2024-02-01", exp: "2026-01-31" },
+        { id: 6, name: "Iron + Vitamin C Tablets", price: 240, description: "To combat iron deficiency & boost absorption.", category: "Vitamins & Supplements", mfg: "2023-10-01", exp: "2025-09-30" },
+        { id: 7, name: "Calcium + Vitamin D3", price: 350, description: "For strong bones and joints.", category: "Vitamins & Supplements", mfg: "2024-03-01", exp: "2026-02-28" },
+        // Feminine Care
+        { id: 8, name: "Intimate Wash (200ml)", price: 299, description: "pH balanced for daily hygiene.", category: "Feminine Care", mfg: "2023-08-01", exp: "2025-07-31" },
+        { id: 9, name: "Cranberry Extract Capsules", price: 550, description: "Supports urinary tract health.", category: "Feminine Care", mfg: "2023-11-01", exp: "2025-10-31" },
+        { id: 10, name: "Sanitary Pads (XL, 30)", price: 199, description: "Ultra-thin with wings for comfort.", category: "Feminine Care", mfg: "2024-02-10", exp: "2027-02-09" },
+        // Fitness & Nutrition
+        { id: 11, name: "Women's Whey Protein (1kg)", price: 2199, description: "Chocolate flavor, for muscle recovery.", category: "Fitness & Nutrition", mfg: "2024-01-01", exp: "2025-06-30" },
+        { id: 12, name: "Plant-Based Protein (500g)", price: 1599, description: "Vegan protein for lean muscle.", category: "Fitness & Nutrition", mfg: "2023-12-15", exp: "2025-06-14" },
+      ];
+
+      // --- DOM ELEMENTS ---
+      const productListEl = document.getElementById("productList");
+      const searchInput = document.getElementById("searchInput");
+      const filterContainer = document.getElementById("filter-container");
+      const cartBtn = document.getElementById("cart-btn");
+      const sideCart = document.getElementById("side-cart");
+      const closeCartBtn = document.getElementById("close-cart-btn");
+      const cartItemsContainer = document.getElementById("cart-items-container");
+      const cartItemCount = document.getElementById("cart-item-count");
+      const cartTotal = document.getElementById("cart-total");
+      
+      let cart = JSON.parse(localStorage.getItem('herHealthCart')) || [];
+      let currentFilter = 'All';
+
+      // --- RENDER FUNCTIONS ---
+      function renderProducts() {
+        productListEl.innerHTML = "";
+        const searchTerm = searchInput.value.toLowerCase();
+
+        const filteredProducts = products.filter(product => {
+          const matchesCategory = currentFilter === 'All' || product.category === currentFilter;
+          const matchesSearch = product.name.toLowerCase().includes(searchTerm);
+          return matchesCategory && matchesSearch;
+        });
+
+        if (filteredProducts.length === 0) {
+          productListEl.innerHTML = `<p class="text-muted text-center col-12">No products found. Try a different search or category.</p>`;
+          return;
+        }
+
+        filteredProducts.forEach(product => {
+          const card = document.createElement("div");
+          card.className = "col-md-6 col-lg-4 mb-4 product-item-card";
+          card.innerHTML = `
+            <div class="card product-card">
+              <!-- IMAGE REMOVED -->
+              <div class="card-body d-flex flex-column">
+                <span class="product-category mb-2">${product.category}</span>
+                <h5 class="card-title">${product.name}</h5>
+                <p class="card-text small flex-grow-1">${product.description}</p>
+                <div class="product-dates">
+                  <span>Mfg: ${product.mfg}</span> | <span>Exp: ${product.exp}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  <span class="product-price">₹${product.price}</span>
+                  <button class="btn add-to-cart-btn" data-product-id="${product.id}"><i class="fas fa-cart-plus"></i> Add</button>
+                </div>
+              </div>
+            </div>
+          `;
+          productListEl.appendChild(card);
+        });
+      }
+
+      function renderFilters() {
+        const categories = ['All', ...new Set(products.map(p => p.category))];
+        filterContainer.innerHTML = categories.map(cat => `
+          <button class="filter-btn ${cat === 'All' ? 'active' : ''}" data-category="${cat}">${cat}</button>
+        `).join('');
+      }
+
+      function updateCartDisplay() {
+        cartItemsContainer.innerHTML = '';
+        let total = 0;
+        let count = 0;
+        
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '<p class="text-center text-muted">Your cart is empty.</p>';
+        } else {
+            cart.forEach(item => {
+                const product = products.find(p => p.id === item.id);
+                total += product.price * item.quantity;
+                count += item.quantity;
+                cartItemsContainer.innerHTML += `
+                    <div class="cart-item">
+                        <!-- IMAGE REMOVED -->
+                        <div class="cart-item-details">
+                            <p class="fw-bold mb-1">${product.name}</p>
+                            <p class="text-muted small mb-1">₹${product.price} x ${item.quantity}</p>
+                        </div>
+                        <button class="btn btn-sm text-danger" onclick="window.handleCartAction('remove', ${item.id})">×</button>
+                    </div>
+                `;
+            });
+        }
+        
+        cartTotal.textContent = `₹${total.toFixed(2)}`;
+        cartItemCount.textContent = count;
+        localStorage.setItem('herHealthCart', JSON.stringify(cart));
+      }
+
+      // --- EVENT HANDLERS & ACTIONS ---
+      function addToCart(productId) {
+        // Shake the cart button for feedback
+        cartBtn.classList.add('shake');
+        setTimeout(() => cartBtn.classList.remove('shake'), 400);
+
+        // Add to cart logic
+        const existingItem = cart.find(item => item.id === productId);
+        if (existingItem) {
+          existingItem.quantity++;
+        } else {
+          cart.push({ id: productId, quantity: 1 });
+        }
+        updateCartDisplay();
+      }
+
+      window.handleCartAction = (action, productId) => {
+          const itemIndex = cart.findIndex(item => item.id === productId);
+          if (itemIndex > -1) {
+              if (action === 'remove') {
+                  cart.splice(itemIndex, 1);
+              }
+          }
+          updateCartDisplay();
+      }
+
+      // --- EVENT LISTENERS ---
+      filterContainer.addEventListener('click', e => {
+        if (e.target.classList.contains('filter-btn')) {
+          document.querySelector('.filter-btn.active').classList.remove('active');
+          e.target.classList.add('active');
+          currentFilter = e.target.dataset.category;
+          renderProducts();
+        }
+      });
+
+      searchInput.addEventListener('keyup', renderProducts);
+      
+      productListEl.addEventListener('click', e => {
+        const button = e.target.closest('.add-to-cart-btn');
+        if (button) {
+          const productId = parseInt(button.dataset.productId);
+          addToCart(productId);
+        }
+      });
+      
+      cartBtn.addEventListener('click', () => sideCart.classList.add('is-open'));
+      closeCartBtn.addEventListener('click', () => sideCart.classList.remove('is-open'));
+
+      // --- INITIALIZATION ---
+      renderFilters();
+      renderProducts();
+      updateCartDisplay();
+    });
+  </script>
+</body>
+</html>

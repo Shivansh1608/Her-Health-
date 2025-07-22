@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HerHealth+ Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- FONT IMPORTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- BOOTSTRAP CSS & FONT AWESOME -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  
+  <!-- YOUR STYLESHEET -->
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+  <header class="primary-header animated-item">
+    <h1>HerHealth+</h1>
+    <nav class="main-nav">
+      <!-- RESTORED ALL YOUR ORIGINAL LINKS -->
+      <a href="checker.html">Symptom Checker</a>
+      <a href="appointment.html">Book Appointment</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </nav>
+  </header>
+
+  <main class="container mt-5">
+    <div class="text-center mb-5 animated-item" style="animation-delay: 0.1s;">
+      <h2 style="font-family: var(--ff-heading); font-size: 2.5rem;">Your Personal Health Companion</h2>
+      <p class="lead mt-2">Empowering you with the tools and information you need.</p>
+    </div>
+
+    <!-- The complete card grid with all 9 of your original cards -->
+    <div class="row g-4 card-grid">
+    
+      <!-- Card 1: Symptom Checker -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <i class="fas fa-stethoscope card-icon"></i>
+          <h4>Symptom Checker</h4>
+          <p>Check common symptoms and get instant feedback on possible conditions.</p>
+          <a href="checker.html" class="btn btn-brand mt-auto">Start Checking</a>
+        </div>
+      </div>
+
+      <!-- Card 2: Book Appointment -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <i class="fas fa-calendar-check card-icon"></i>
+          <h4>Book Appointment</h4>
+          <p>Choose a department, doctor, date & time — and schedule your visit easily.</p>
+          <a href="appointment.html" class="btn btn-brand mt-auto">Book Now</a>
+        </div>
+      </div>
+
+      <!-- Card 3: Track Lab Tests -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <i class="fas fa-vials card-icon"></i>
+          <h4>Track Lab Tests</h4>
+          <p>Monitor your medical test progress and status easily in one place.</p>
+          <a href="lab-tests.html" class="btn btn-brand mt-auto">Track Now</a>
+        </div>
+      </div>
+
+      <!-- Card 4: BMI Calculator -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <i class="fas fa-heartbeat card-icon"></i>
+          <h4>BMI Calculator</h4>
+          <p>Calculate your Body Mass Index and check your weight category.</p>
+          <a href="bmi.html" class="btn btn-brand mt-auto">Check BMI</a>
+        </div>
+      </div>
+
+      <!-- Card 5: Period Tracker -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <i class="fas fa-venus card-icon"></i>
+          <h4>Period Tracker</h4>
+          <p>Track your menstrual cycle and get predictions on fertility windows.</p>
+          <a href="period-tracker.html" class="btn btn-brand mt-auto">Track Cycle</a>
+        </div>
+      </div>
+
+      <!-- Card 6: Mental Wellness Quiz -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <i class="fas fa-brain card-icon"></i>
+          <h4>Mental Wellness</h4>
+          <p>Take a short quiz to check your emotional well-being and stress level.</p>
+          <a href="mental-health.html" class="btn btn-brand mt-auto">Start Quiz</a>
+        </div>
+      </div>
+
+      <!-- Card 7: Buy Medicines -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <i class="fas fa-pills card-icon"></i>
+          <h4>Buy Medicines</h4>
+          <p>Order genuine medicines with home delivery from trusted pharmacies.</p>
+          <!-- Using the new outline button style -->
+          <a href="pharmacy.html" class="btn btn-brand-outline mt-auto">Shop Now</a>
+        </div>
+      </div>
+
+      <!-- Card 8: Login -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <i class="fas fa-sign-in-alt card-icon"></i>
+          <h4>User Login</h4>
+          <p>Login to access your health records and appointments.</p>
+          <!-- Using the new outline button style -->
+          <a href="login.html" class="btn btn-brand-outline mt-auto">Login</a>
+        </div>
+      </div>
+
+      <!-- Card 9: Register -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <i class="fas fa-user-plus card-icon"></i>
+          <h4>Create Account</h4>
+          <p>Register now to get started with HerHealth+ and personalized care.</p>
+          <!-- Using the new outline button style -->
+          <a href="register.html" class="btn btn-brand-outline mt-auto">Register</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="text-center mt-5 p-4 animated-item" style="animation-delay: 1s;">
+    <p>© 2025 HerHealth+. All rights reserved.</p>
+  </footer>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

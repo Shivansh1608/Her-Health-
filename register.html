@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register | HerHealth+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <!-- FONT IMPORTS & STYLESHEETS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    /* 
+    ============================================
+    SHARED STYLES (THEME & BASE)
+    ============================================
+    */
+    :root {
+      --clr-primary: #E60073;
+      --clr-primary-light: #FF4DA6;
+      --clr-secondary: #6A1B9A;
+      --clr-text: #4A4A4A;
+      --clr-heading: #333333;
+      --ff-heading: 'Montserrat', sans-serif;
+      --ff-body: 'Poppins', sans-serif;
+      --shadow-lg: 0 12px 35px rgba(230, 0, 115, 0.25);
+      --border-radius: 12px;
+      --transition: all 0.35s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    /* 
+    ============================================
+    LOGIN/REGISTER PAGE STYLES
+    ============================================
+    */
+    
+    body {
+        font-family: var(--ff-body);
+        color: var(--clr-text);
+        background: linear-gradient(-45deg, #e0eafc, #cfdef3, #e0eafc, #fefefe);
+        background-size: 400% 400%;
+        animation: calming-bg 20s ease infinite;
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        padding: 1rem;
+    }
+    @keyframes calming-bg { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
+
+    .auth-container {
+      display: flex;
+      width: 100%;
+      max-width: 900px;
+      min-height: 600px;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .auth-art-side {
+      flex: 1;
+      background: linear-gradient(160deg, var(--clr-secondary), var(--clr-primary));
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .art-graphic { width: 200px; height: 200px; position: relative; }
+    .art-graphic::before, .art-graphic::after { content: ''; position: absolute; border-radius: 50%; background: rgba(255,255,255,0.1); animation: pulse 4s ease-in-out infinite; }
+    .art-graphic::before { width: 100%; height: 100%; top: 0; left: 0; }
+    .art-graphic::after { width: 150%; height: 150%; top: -25%; left: -25%; animation-delay: -2s; }
+    @keyframes pulse { 0%, 100% { transform: scale(0.8); opacity: 0.1; } 50% { transform: scale(1.1); opacity: 0.3; } }
+    .art-icon { font-size: 5rem; color: white; text-shadow: 0 0 20px rgba(255,255,255,0.5); position: relative; z-index: 2; }
+
+    .auth-form-side {
+      flex: 1;
+      padding: 2rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .auth-form-side h2 { font-family: var(--ff-heading); color: var(--clr-heading); margin-bottom: 0.5rem; }
+
+    .form-group-float { position: relative; margin-bottom: 1.75rem; }
+    .form-control-float { width: 100%; border: none; border-bottom: 2px solid #ccc; padding: 10px 0; background: transparent; font-size: 1rem; outline: none; position: relative; z-index: 1; }
+    .form-control-float:focus { border-color: var(--clr-primary); }
+    .form-label-float { position: absolute; top: 10px; left: 0; color: #999; transition: var(--transition); pointer-events: none; }
+    .form-control-float:focus + .form-label-float, .form-control-float:not(:placeholder-shown) + .form-label-float { top: -10px; font-size: 0.8rem; color: var(--clr-primary); }
+    
+    .auth-btn { width: 100%; padding: 0.8rem; border: none; border-radius: 50px; background: linear-gradient(90deg, var(--clr-primary), var(--clr-primary-light)); color: white; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-lg); }
+    .auth-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(230,0,115,0.3); }
+
+    @media (max-width: 768px) {
+      .auth-container { flex-direction: column; min-height: auto; }
+      .auth-art-side { display: none; }
+      .auth-form-side { padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-container animated-item">
+    <!-- Left Side: Animated Art -->
+    <div class="auth-art-side">
+      <div class="art-graphic">
+        <i class="fas fa-user-plus art-icon"></i>
+      </div>
+    </div>
+
+    <!-- Right Side: Register Form -->
+    <div class="auth-form-side">
+      <h2>Create Your Account</h2>
+      <p class="text-muted mb-4">Join HerHealth+ to start your wellness journey.</p>
+      
+      <form id="registerForm">
+        <div class="form-group-float">
+          <input type="text" class="form-control-float" id="name" placeholder=" " required />
+          <label for="name" class="form-label-float">Full Name</label>
+        </div>
+        <div class="form-group-float">
+          <input type="email" class="form-control-float" id="email" placeholder=" " required />
+          <label for="email" class="form-label-float">Email</label>
+        </div>
+        <div class="form-group-float">
+          <input type="password" class="form-control-float" id="password" placeholder=" " required />
+          <label for="password" class="form-label-float">Password</label>
+        </div>
+        <div class="form-group-float">
+            <input type="password" class="form-control-float" id="confirmPassword" placeholder=" " required />
+            <label for="confirmPassword" class="form-label-float">Confirm Password</label>
+          </div>
+        <button type="submit" class="auth-btn mt-3">Register</button>
+      </form>
+      <p class="text-center mt-4">Already have an account? <a href="login.html" style="color: var(--clr-primary); font-weight: 600;">Login</a></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      // --- Validation ---
+      if (!name || !email || !password) {
+        alert("Please fill out all fields.");
+        return;
+      }
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+      if (password.length < 6) {
+        alert("Password must be at least 6 characters long.");
+        return;
+      }
+
+      // Check if user already exists
+      const existingUser = JSON.parse(localStorage.getItem("user"));
+      if (existingUser && existingUser.email === email) {
+        alert("An account with this email already exists. Please login.");
+        return;
+      }
+
+      // --- Create and Save User ---
+      const newUser = {
+        name: name,
+        email: email,
+        password: password // In a real app, you would HASH this password!
+      };
+      
+      // THIS IS THE MOST IMPORTANT LINE
+      // It creates the "key" that the login page is looking for.
+      localStorage.setItem("user", JSON.stringify(newUser));
+
+      alert("✅ Registration successful! You can now log in.");
+      
+      // Redirect to the login page
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

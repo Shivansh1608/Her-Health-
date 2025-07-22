@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BMI Calculator | HerHealth+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- FONT IMPORTS & STYLESHEETS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    /* 
+    ============================================
+    ALL STYLES FOR THE HERHEALTH+ APPLICATION
+    ============================================
+    */
+
+    /* --- 1. THEME & BASE STYLES --- */
+    :root {
+      --clr-primary: #E60073;
+      --clr-primary-light: #FF4DA6;
+      --clr-secondary: #6A1B9A;
+      --clr-bg: #FFF5F7;
+      --clr-surface: #FFFFFF;
+      --clr-text: #4A4A4A;
+      --clr-heading: #333333;
+      --clr-bmi-under: #3498db;
+      --clr-bmi-normal: #2ecc71;
+      --clr-bmi-over: #f1c40f;
+      --clr-bmi-obese: #e74c3c;
+
+      --ff-heading: 'Montserrat', sans-serif;
+      --ff-body: 'Poppins', sans-serif;
+
+      --shadow-md: 0 8px 25px rgba(230, 0, 115, 0.15);
+      --border-radius: 12px;
+      --transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--ff-body);
+      background-color: var(--clr-bg);
+      color: var(--clr-text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    @keyframes slideUpFadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animated-item { animation: slideUpFadeIn 0.6s ease-out both; }
+    
+    /* --- HEADER, FOOTER, BUTTONS (From previous designs) --- */
+    .primary-header { background: linear-gradient(90deg, var(--clr-secondary), var(--clr-primary)); color: white; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .primary-header h1 { font-family: var(--ff-heading); font-size: 1.8rem; }
+    .main-nav a { margin-left: 25px; color: white; text-decoration: none; font-weight: 500; position: relative; padding-bottom: 8px; transition: var(--transition); }
+    .main-nav a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--clr-primary-light); border-radius: 5px; transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease-in-out; }
+    .main-nav a:hover { color: #fff; }
+    .main-nav a:hover::after { transform: scaleX(1); }
+    .primary-footer { text-align: center; margin-top: 5rem; padding: 2rem; color: #888; }
+    .btn-brand-outline { background-color: transparent; border: 2px solid var(--clr-primary); color: var(--clr-primary); font-weight: 600; padding: 0.8rem 2rem; border-radius: 50px; transition: var(--transition); box-shadow: var(--shadow-md); text-decoration: none; }
+    .btn-brand-outline:hover { background-color: var(--clr-primary); color: white; transform: translateY(-3px); }
+
+    /* 
+    ============================================
+    11. BMI CALCULATOR STYLES
+    ============================================
+    */
+    .bmi-container {
+      background-color: var(--clr-surface);
+      border-radius: var(--border-radius);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-md);
+    }
+    
+    /* --- Custom Slider Styles --- */
+    .slider-group label {
+      font-weight: 600;
+      color: var(--clr-heading);
+    }
+    .slider-value {
+      font-family: var(--ff-heading);
+      font-size: 1.5rem;
+      color: var(--clr-primary);
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      background: #f0e6e8;
+      border-radius: 5px;
+      outline: none;
+      opacity: 0.7;
+      transition: opacity .2s;
+    }
+    input[type="range"]:hover { opacity: 1; }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--clr-primary);
+      cursor: pointer;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      background: var(--clr-primary);
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    /* --- BMI Gauge --- */
+    .gauge-container {
+      width: 280px;
+      height: 140px; /* Half height for semi-circle */
+      position: relative;
+      overflow: hidden; /* This creates the semi-circle effect */
+      margin: 1rem auto 0;
+    }
+    .gauge-bg {
+      width: 100%;
+      height: 100%;
+      background: conic-gradient(
+        from 180deg, 
+        var(--clr-bmi-under) 0 21%, 
+        var(--clr-bmi-normal) 21% 50%, 
+        var(--clr-bmi-over) 50% 71%, 
+        var(--clr-bmi-obese) 71% 100%
+      );
+      border-radius: 140px 140px 0 0; /* Makes it a semi-circle */
+    }
+    .gauge-needle {
+      width: 4px;
+      height: 120px;
+      background: var(--clr-heading);
+      border-radius: 5px;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform-origin: bottom center;
+      transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncy effect */
+      transform: translateX(-50%) rotate(var(--bmi-rotation, -90deg));
+    }
+    .gauge-center-dial {
+      width: 20px;
+      height: 20px;
+      background: var(--clr-heading);
+      border-radius: 50%;
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* --- Result Text Styles --- */
+    .result-display { text-align: center; }
+    .result-display .bmi-value {
+      font-family: var(--ff-heading);
+      font-size: 3.5rem;
+      font-weight: 700;
+      line-height: 1;
+      transition: color 0.5s ease;
+    }
+    .result-display .bmi-category {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 0;
+    }
+    .result-display .bmi-description {
+      min-height: 60px; /* Prevent layout shift */
+      color: #666;
+    }
+    .result-display .result-action {
+      min-height: 50px; /* Prevent layout shift */
+    }
+  </style>
+</head>
+<body>
+
+  <header class="primary-header animated-item">
+    <h1>HerHealth+</h1>
+    <nav class="main-nav">
+      <a href="index.html">Back to Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="container my-5">
+    <div class="text-center mb-5 animated-item" style="animation-delay: 0.2s;">
+      <h2 style="font-family: var(--ff-heading); font-size: 2.5rem;">🧮 BMI Calculator</h2>
+      <p class="lead mt-2">Use our interactive tool to check your Body Mass Index.</p>
+    </div>
+    
+    <div class="bmi-container animated-item" style="animation-delay: 0.3s;">
+      <div class="row align-items-center g-5">
+        <!-- Left Column: Input Sliders -->
+        <div class="col-lg-5">
+          <div class="slider-group mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <label for="height">Height</label>
+              <span class="slider-value" id="height-val">160 cm</span>
+            </div>
+            <input type="range" id="height" min="120" max="220" value="160">
+          </div>
+          <div class="slider-group">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <label for="weight">Weight</label>
+              <span class="slider-value" id="weight-val">60 kg</span>
+            </div>
+            <input type="range" id="weight" min="30" max="150" value="60">
+          </div>
+        </div>
+
+        <!-- Right Column: Visual Result -->
+        <div class="col-lg-7">
+          <div class="result-display">
+            <div class="gauge-container">
+              <div class="gauge-bg"></div>
+              <div class="gauge-needle" id="gauge-needle"></div>
+              <div class="gauge-center-dial"></div>
+            </div>
+            <p class="bmi-value mt-3" id="bmi-value">23.4</p>
+            <h3 class="bmi-category" id="bmi-category">Normal</h3>
+            <p class="bmi-description" id="bmi-description">You are in a healthy weight range. Keep up the great work with a balanced diet and regular exercise!</p>
+            <div class="result-action mt-3" id="result-action">
+              <!-- Action button will be inserted here by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="primary-footer">
+    © 2025 HerHealth+. All rights reserved.
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const heightSlider = document.getElementById('height');
+      const weightSlider = document.getElementById('weight');
+      const heightVal = document.getElementById('height-val');
+      const weightVal = document.getElementById('weight-val');
+      
+      const needle = document.getElementById('gauge-needle');
+      const bmiValueDisplay = document.getElementById('bmi-value');
+      const bmiCategoryDisplay = document.getElementById('bmi-category');
+      const bmiDescriptionDisplay = document.getElementById('bmi-description');
+      const resultAction = document.getElementById('result-action');
+
+      function calculateBMI() {
+        const height = parseInt(heightSlider.value) / 100;
+        const weight = parseInt(weightSlider.value);
+        
+        // Update display values
+        heightVal.textContent = `${heightSlider.value} cm`;
+        weightVal.textContent = `${weightSlider.value} kg`;
+
+        if (height > 0 && weight > 0) {
+          const bmi = weight / (height * height);
+          bmiValueDisplay.textContent = bmi.toFixed(1);
+
+          // Update Gauge
+          // Map BMI range (e.g., 10-40) to rotation range (-90 to 90 deg)
+          const bmiMin = 10, bmiMax = 40;
+          const rotationMin = -80, rotationMax = 80;
+          const rotation = (bmi - bmiMin) / (bmiMax - bmiMin) * (rotationMax - rotationMin) + rotationMin;
+          const clampedRotation = Math.max(rotationMin, Math.min(rotation, rotationMax)); // Clamp value
+          needle.style.setProperty('--bmi-rotation', `${clampedRotation}deg`);
+
+          // Update Text and Colors
+          updateResultText(bmi);
+        }
+      }
+      
+      function updateResultText(bmi) {
+        let category = "";
+        let description = "";
+        let color = "";
+        let actionHTML = "";
+
+        if (bmi < 18.5) {
+          category = "Underweight";
+          description = "You may be underweight. It's a good idea to consult a doctor or nutritionist to ensure you're getting the nutrients you need.";
+          color = 'var(--clr-bmi-under)';
+          actionHTML = `<a href="appointment.html" class="btn btn-brand-outline">Talk to a Nutritionist</a>`;
+        } else if (bmi < 25) {
+          category = "Normal";
+          description = "You are in a healthy weight range. Keep up the great work with a balanced diet and regular exercise!";
+          color = 'var(--clr-bmi-normal)';
+          actionHTML = `<p class="text-success fw-bold">Excellent!</p>`;
+        } else if (bmi < 30) {
+          category = "Overweight";
+          description = "You may be in the overweight range. Small changes in diet and activity can make a big difference. Consider discussing a plan with a professional.";
+          color = 'var(--clr-bmi-over)';
+          actionHTML = `<a href="appointment.html" class="btn btn-brand-outline">Discuss a Health Plan</a>`;
+        } else {
+          category = "Obese";
+          description = "Your BMI falls into the obese range. It's highly recommended to consult a healthcare provider to discuss potential health risks and a management plan.";
+          color = 'var(--clr-bmi-obese)';
+          actionHTML = `<a href="appointment.html" class="btn btn-brand-outline">Consult a Doctor</a>`;
+        }
+        
+        bmiValueDisplay.style.color = color;
+        bmiCategoryDisplay.textContent = category;
+        bmiDescriptionDisplay.textContent = description;
+        resultAction.innerHTML = actionHTML;
+      }
+
+      // Add event listeners to sliders for real-time updates
+      heightSlider.addEventListener('input', calculateBMI);
+      weightSlider.addEventListener('input', calculateBMI);
+
+      // Initial calculation on page load
+      calculateBMI();
+    });
+  </script>
+</body>
+</html>

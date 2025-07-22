@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Track Lab Tests | HerHealth+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <!-- FONT IMPORTS & STYLESHEETS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    /* 
+    ============================================
+    ALL STYLES FOR THE HERHEALTH+ APPLICATION
+    ============================================
+    */
+
+    /* --- 1. THEME & BASE STYLES --- */
+    :root {
+      --clr-primary: #E60073;
+      --clr-primary-light: #FF4DA6;
+      --clr-secondary: #6A1B9A;
+      --clr-bg: #FFF5F7;
+      --clr-surface: #FFFFFF;
+      --clr-text: #4A4A4A;
+      --clr-heading: #333333;
+      --clr-success: #2E7D32;
+      --clr-warning: #FF8F00;
+      --clr-info: #1976D2;
+
+      --ff-heading: 'Montserrat', sans-serif;
+      --ff-body: 'Poppins', sans-serif;
+
+      --shadow-md: 0 8px 25px rgba(230, 0, 115, 0.15);
+      --shadow-lg: 0 12px 35px rgba(230, 0, 115, 0.25);
+      --border-radius: 12px;
+      --transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--ff-body);
+      background-color: var(--clr-bg);
+      color: var(--clr-text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    @keyframes slideUpFadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animated-item { animation: slideUpFadeIn 0.6s ease-out both; }
+    
+    /* --- HEADER, FOOTER, BUTTONS (From previous designs) --- */
+    .primary-header { background: linear-gradient(90deg, var(--clr-secondary), var(--clr-primary)); color: white; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .primary-header h1 { font-family: var(--ff-heading); font-size: 1.8rem; }
+    .main-nav a { margin-left: 25px; color: white; text-decoration: none; font-weight: 500; position: relative; padding-bottom: 8px; transition: var(--transition); }
+    .main-nav a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--clr-primary-light); border-radius: 5px; transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease-in-out; }
+    .main-nav a:hover { color: #fff; }
+    .main-nav a:hover::after { transform: scaleX(1); }
+    .primary-footer { text-align: center; margin-top: 5rem; padding: 2rem; color: #888; }
+    .btn-brand { background: linear-gradient(90deg, var(--clr-primary), var(--clr-primary-light)); color: white; border: none; font-weight: 600; padding: 0.8rem 2rem; border-radius: 50px; transition: var(--transition); box-shadow: var(--shadow-md); text-decoration: none; }
+    .btn-brand:hover { color: white; transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+    .form-control, .form-select { padding: 12px 15px; border: 2px solid #EAEAEA; border-radius: 8px; font-size: 1rem; font-family: var(--ff-body); transition: var(--transition); background-color: #fcfcfc; }
+    .form-control:focus, .form-select:focus { border-color: var(--clr-primary); box-shadow: 0 0 0 4px rgba(230, 0, 115, 0.1); outline: none; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; font-weight: 600; color: var(--clr-heading); margin-bottom: 0.5rem; }
+
+    /* 
+    ============================================
+    10. LAB TEST TRACKER STYLES
+    ============================================
+    */
+    .add-test-container {
+      background: var(--clr-surface);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+    }
+    
+    /* --- Custom File Input --- */
+    .file-drop-zone {
+      border: 2px dashed #EAEAEA;
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .file-drop-zone:hover {
+      border-color: var(--clr-primary);
+      background-color: var(--clr-bg);
+    }
+    .file-drop-zone .icon {
+      font-size: 2rem;
+      color: var(--clr-primary);
+    }
+    .file-drop-zone p {
+      margin: 0.5rem 0 0;
+      font-weight: 500;
+    }
+    .file-drop-zone small {
+      color: #999;
+    }
+    #testFile {
+      display: none; /* Hide the actual input */
+    }
+
+    /* --- Lab Test Card --- */
+    .lab-test-card {
+      background-color: var(--clr-surface);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border: 1px solid #f0e6e8;
+      opacity: 0; /* For animation */
+      transform: scale(0.95);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .lab-test-card.is-visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .lab-test-card h5 {
+      font-weight: 600;
+      color: var(--clr-heading);
+    }
+    .lab-test-card .test-info {
+      font-size: 0.9rem;
+      color: #777;
+    }
+    
+    /* --- Status Badges --- */
+    .status-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: white;
+    }
+    .status-badge.pending { background-color: var(--clr-warning); }
+    .status-badge.in-progress { background-color: var(--clr-info); }
+    .status-badge.completed { background-color: var(--clr-success); }
+
+    .report-preview img {
+      max-width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+    
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      border-top: 1px solid #f0e6e8;
+      padding-top: 1rem;
+    }
+
+    /* --- Empty State --- */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      background-color: var(--clr-surface);
+      border: 2px dashed #f0e6e8;
+      border-radius: var(--border-radius);
+    }
+    .empty-state .icon {
+      font-size: 3rem;
+      color: #e0e0e0;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="primary-header animated-item">
+    <h1>HerHealth+</h1>
+    <nav class="main-nav">
+      <a href="index.html">Back to Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="container my-5">
+    <div class="text-center mb-5 animated-item" style="animation-delay: 0.2s;">
+      <h2 style="font-family: var(--ff-heading); font-size: 2.5rem;">🧪 Track Your Lab Tests</h2>
+      <p class="lead mt-2">Add and manage all your medical test reports in one place.</p>
+    </div>
+    
+    <div class="row g-5">
+      <!-- Left Column: Add New Test Form -->
+      <div class="col-lg-5 animated-item" style="animation-delay: 0.3s;">
+        <div class="add-test-container">
+          <h4 class="mb-4" style="font-family: var(--ff-heading);">Add New Lab Test</h4>
+          <form id="labForm">
+            <div class="form-group">
+              <label for="testName">Test Name</label>
+              <input type="text" class="form-control" id="testName" placeholder="e.g., Blood Sugar Test" required />
+            </div>
+            <div class="form-group">
+              <label for="testDate">Test Date</label>
+              <input type="date" class="form-control" id="testDate" required />
+            </div>
+            <div class="form-group">
+              <label for="testStatus">Status</label>
+              <select class="form-select" id="testStatus">
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Attach Report (Optional)</label>
+              <input type="file" id="testFile" accept=".pdf,.jpg,.jpeg,.png" />
+              <label for="testFile" class="file-drop-zone">
+                <i class="fas fa-cloud-upload-alt icon"></i>
+                <p id="fileName">Click or drag file to upload</p>
+                <small>PDF, JPG, PNG supported</small>
+              </label>
+            </div>
+            <button type="submit" class="btn btn-brand w-100 mt-2">➕ Add Lab Test</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column: List of Tests -->
+      <div class="col-lg-7 animated-item" style="animation-delay: 0.4s;">
+        <div id="labTestList" class="row g-4">
+          <!-- Lab test cards will be dynamically inserted here by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="primary-footer">
+    © 2025 HerHealth+. All rights reserved.
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById("labForm");
+      const labTestList = document.getElementById("labTestList");
+      const fileInput = document.getElementById("testFile");
+      const fileNameDisplay = document.getElementById("fileName");
+
+      let labTests = JSON.parse(localStorage.getItem("labTests")) || [];
+
+      // --- EVENT LISTENERS ---
+
+      // Handle form submission
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const file = fileInput.files[0];
+
+        const test = {
+          id: Date.now(), // Unique ID for each test
+          name: document.getElementById("testName").value,
+          date: document.getElementById("testDate").value,
+          status: document.getElementById("testStatus").value,
+          report: null,
+          fileName: ""
+        };
+
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function () {
+            test.report = reader.result;
+            test.fileName = file.name;
+            addTestAndRender(test);
+          };
+          reader.readAsDataURL(file);
+        } else {
+          addTestAndRender(test);
+        }
+      });
+
+      // Update file name display on change
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+          fileNameDisplay.textContent = fileInput.files[0].name;
+        } else {
+          fileNameDisplay.textContent = 'Click or drag file to upload';
+        }
+      });
+
+      // --- FUNCTIONS ---
+
+      function addTestAndRender(test) {
+        labTests.unshift(test); // Add to the beginning of the array
+        localStorage.setItem("labTests", JSON.stringify(labTests));
+        form.reset();
+        fileNameDisplay.textContent = 'Click or drag file to upload';
+        renderTests();
+      }
+
+      function renderTests() {
+        labTestList.innerHTML = "";
+
+        if (labTests.length === 0) {
+          labTestList.innerHTML = `
+            <div class="col-12">
+              <div class="empty-state">
+                <i class="fas fa-folder-open icon"></i>
+                <h4>No Lab Tests Yet</h4>
+                <p class="text-muted">Use the form on the left to add your first test report.</p>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        labTests.forEach(test => {
+          const statusClass = test.status.toLowerCase().replace(' ', '-');
+          const div = document.createElement("div");
+          div.className = "col-12"; // Each card takes full width of the right column
+          div.innerHTML = `
+            <div class="lab-test-card">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h5>${test.name}</h5>
+                  <p class="test-info mb-2">Tested on: ${test.date}</p>
+                </div>
+                <span class="status-badge ${statusClass}">${test.status}</span>
+              </div>
+
+              ${test.report ? `
+                <div class="report-preview mt-3">
+                  ${test.fileName.endsWith('.pdf') ? 
+                    `<a href="${test.report}" target="_blank" class="btn btn-brand-outline btn-sm">View PDF Report</a>` : 
+                    `<img src="${test.report}" alt="Report Image">`
+                  }
+                </div>
+              ` : `<p class="text-muted mt-3">No report uploaded.</p>`}
+
+              <div class="card-actions">
+                <div>
+                  <label class="form-label-sm me-2">Update Status:</label>
+                  <select class="form-select form-select-sm w-auto d-inline-block" onchange="updateStatus(${test.id}, this.value)">
+                    <option value="Pending" ${test.status === "Pending" ? "selected" : ""}>Pending</option>
+                    <option value="In Progress" ${test.status === "In Progress" ? "selected" : ""}>In Progress</option>
+                    <option value="Completed" ${test.status === "Completed" ? "selected" : ""}>Completed</option>
+                  </select>
+                </div>
+                <button class="btn btn-outline-danger btn-sm" onclick="deleteTest(${test.id})">🗑 Remove</button>
+              </div>
+            </div>
+          `;
+          labTestList.appendChild(div);
+          
+          // Trigger the animation
+          setTimeout(() => div.querySelector('.lab-test-card').classList.add('is-visible'), 50);
+        });
+      }
+
+      window.updateStatus = function(id, newStatus) {
+        const testIndex = labTests.findIndex(t => t.id === id);
+        if (testIndex > -1) {
+          labTests[testIndex].status = newStatus;
+          localStorage.setItem("labTests", JSON.stringify(labTests));
+          renderTests(); // Re-render to update the badge color
+        }
+      }
+
+      window.deleteTest = function(id) {
+        if (confirm("Are you sure you want to remove this test?")) {
+          labTests = labTests.filter(t => t.id !== id);
+          localStorage.setItem("labTests", JSON.stringify(labTests));
+          renderTests();
+        }
+      }
+
+      // Initial render on page load
+      renderTests();
+    });
+  </script>
+</body>
+</html>

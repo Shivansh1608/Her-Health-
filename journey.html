@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Daily Journey | HerHealth+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <!-- FONT IMPORTS & STYLESHEETS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    /* 
+    ============================================
+    SHARED STYLES (THEME, HEADER, ETC.)
+    ============================================
+    */
+    :root {
+      --clr-primary: #E60073;
+      --clr-secondary: #6A1B9A;
+      --clr-text: #4A4A4A;
+      --clr-heading: #333333;
+      --ff-heading: 'Montserrat', sans-serif;
+      --ff-body: 'Poppins', sans-serif;
+      --shadow-md: 0 8px 25px rgba(230, 0, 115, 0.15);
+      --border-radius: 12px;
+      --transition: all 0.35s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .primary-header { background: linear-gradient(90deg, var(--clr-secondary), var(--clr-primary)); color: white; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .primary-header h1 { font-family: var(--ff-heading); font-size: 1.8rem; }
+    .main-nav a { margin-left: 25px; color: white; text-decoration: none; font-weight: 500; }
+    .primary-footer { text-align: center; margin-top: 5rem; padding: 2rem; color: #888; background: transparent; }
+
+    /* 
+    ============================================
+    18. DAILY JOURNEY STYLES
+    ============================================
+    */
+    
+    body {
+        font-family: var(--ff-body);
+        color: var(--clr-text);
+        background: linear-gradient(125deg, #f5f7fa, #c3cfe2, #f5f7fa);
+        background-size: 400% 400%;
+        animation: journey-bg 30s ease infinite;
+    }
+    @keyframes journey-bg { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
+
+    /* --- Streak Header --- */
+    .streak-header {
+      background: white;
+      padding: 1rem;
+      border-radius: 50px;
+      box-shadow: var(--shadow-md);
+      display: inline-block;
+    }
+    .streak-header .streak-count {
+      color: #ff9800;
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+
+    /* --- Task Card --- */
+    .task-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      border: 2px solid transparent;
+      transition: var(--transition);
+      opacity: 1;
+      transform: scale(1);
+    }
+    .task-card.completed {
+      opacity: 0.6;
+      border-color: #2ecc71;
+      transform: scale(0.98);
+    }
+    .task-card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+    .task-icon {
+      font-size: 1.5rem;
+      width: 50px;
+      height: 50px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+    }
+    .icon-mind { background-color: #8e44ad; }
+    .icon-body { background-color: #2980b9; }
+    .icon-nourish { background-color: #27ae60; }
+    .task-title { font-family: var(--ff-heading); font-size: 1.2rem; margin: 0; }
+    
+    .task-action button {
+      font-weight: 600;
+      border-radius: 50px;
+      padding: 0.6rem 1.5rem;
+    }
+    .task-card.completed .task-action {
+      text-align: center;
+      font-weight: 600;
+      color: #2ecc71;
+    }
+    .task-card.completed .task-action::before {
+      content: '\f00c'; /* Font Awesome checkmark */
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      margin-right: 0.5rem;
+    }
+
+    /* --- Breathing Animation Modal --- */
+    .breathing-circle {
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(45deg, var(--clr-primary), var(--clr-secondary));
+      border-radius: 50%;
+      margin: 2rem auto;
+      animation: breath-animation 8s ease-in-out infinite;
+    }
+    @keyframes breath-animation {
+      0%, 100% { transform: scale(0.8); }
+      50% { transform: scale(1); }
+    }
+
+    /* --- Completion State --- */
+    .completion-container {
+      text-align: center;
+      background: white;
+      padding: 3rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+    }
+    .completion-container .icon {
+      font-size: 4rem;
+      color: #fdd835;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="primary-header">
+    <h1>HerHealth+</h1>
+    <nav class="main-nav">
+      <a href="index.html">⬅ Back to Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="container my-5">
+    <div class="text-center mb-5">
+      <h2 style="font-family: var(--ff-heading); font-size: 2.5rem;">Your Daily Wellness Journey</h2>
+      <div id="streak-header" class="streak-header mt-3">
+        <!-- Streak info will be injected here -->
+      </div>
+    </div>
+    
+    <div id="tasks-container" class="row g-4">
+      <!-- Task cards will be injected here -->
+    </div>
+    
+    <div id="completion-container" class="completion-container" style="display: none;">
+      <i class="fas fa-star icon mb-3"></i>
+      <h3 style="font-family: var(--ff-heading);">All Tasks Completed for Today!</h3>
+      <p class="lead">Amazing work! You've taken a wonderful step for your well-being. See you tomorrow!</p>
+    </div>
+  </main>
+
+  <!-- Breathing Exercise Modal -->
+  <div class="modal fade" id="breathingModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Mindful Moment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p id="breathing-instruction" class="lead fw-bold">Get ready...</p>
+          <div class="breathing-circle"></div>
+          <p>Follow the rhythm. Let go of your thoughts.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="primary-footer">
+    © 2025 HerHealth+. All rights reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- 1. GATEKEEPER & DATA SETUP ---
+        if (!localStorage.getItem("loggedInUser")) {
+            window.location.href = "login.html";
+            return;
+        }
+        
+        const tasksContainer = document.getElementById('tasks-container');
+        const completionContainer = document.getElementById('completion-container');
+        const streakHeader = document.getElementById('streak-header');
+        
+        const allTasks = {
+            mind: [
+                { id: 'm1', title: 'Mindful Breathing', description: 'Take 1 minute to focus on your breath. This simple act can calm your nervous system.', actionType: 'modal', actionTarget: '#breathingModal' },
+                { id: 'm2', title: 'Gratitude Moment', description: 'Write down one thing you are grateful for today. It can be big or small.', actionType: 'prompt' }
+            ],
+            body: [
+                { id: 'b1', title: 'Hydration Check', description: 'Drink a full glass of water. Proper hydration is key to energy and focus.', actionType: 'checkbox' },
+                { id: 'b2', title: '5-Minute Stretch', description: 'Gently stretch your neck, shoulders, and back to release tension.', actionType: 'checkbox' }
+            ],
+            nourish: [
+                { id: 'n1', title: 'Mindful Eating', description: 'For your next meal, try to eat without distractions like your phone or TV.', actionType: 'checkbox' },
+                { id: 'n2', title: 'Add Some Green', description: 'Incorporate a green vegetable into one of your meals today.', actionType: 'checkbox' }
+            ]
+        };
+
+        // --- 2. DAILY TASK & STREAK LOGIC ---
+        function getDailyState() {
+            const today = new Date().toDateString();
+            let state = JSON.parse(localStorage.getItem('wellnessJourney')) || {};
+
+            if (state.date !== today) {
+                // It's a new day, generate new tasks
+                state = {
+                    date: today,
+                    tasks: {
+                        mind: { ...allTasks.mind[Math.floor(Math.random() * allTasks.mind.length)], completed: false },
+                        body: { ...allTasks.body[Math.floor(Math.random() * allTasks.body.length)], completed: false },
+                        nourish: { ...allTasks.nourish[Math.floor(Math.random() * allTasks.nourish.length)], completed: false }
+                    },
+                    streak: state.streak || 0,
+                    lastCompleted: state.lastCompleted
+                };
+            }
+            return state;
+        }
+
+        let dailyState = getDailyState();
+
+        // --- 3. RENDER FUNCTIONS ---
+        function renderTasks() {
+            tasksContainer.innerHTML = '';
+            let allCompleted = true;
+            
+            Object.entries(dailyState.tasks).forEach(([category, task]) => {
+                if (!task.completed) allCompleted = false;
+
+                const card = document.createElement('div');
+                card.className = 'col-lg-4';
+                card.innerHTML = `
+                    <div class="task-card ${task.completed ? 'completed' : ''}" data-category="${category}">
+                        <div class="task-card-header">
+                            <i class="fas ${getIconForCategory(category)} task-icon icon-${category}"></i>
+                            <div>
+                                <h5 class="task-title">${task.title}</h5>
+                                <small class="text-muted text-uppercase">${category}</small>
+                            </div>
+                        </div>
+                        <p>${task.description}</p>
+                        <div class="task-action mt-auto pt-3">
+                            ${task.completed ? 'Completed!' : getActionButton(task)}
+                        </div>
+                    </div>
+                `;
+                tasksContainer.appendChild(card);
+            });
+            
+            updateStreakDisplay();
+            
+            if (allCompleted) {
+                tasksContainer.style.display = 'none';
+                completionContainer.style.display = 'block';
+            }
+        }
+        
+        function getActionButton(task) {
+            if (task.actionType === 'modal') {
+                return `<button class="btn btn-outline-primary task-complete-btn" data-bs-toggle="modal" data-bs-target="${task.actionTarget}">Start Activity</button>`;
+            }
+            return `<button class="btn btn-outline-primary task-complete-btn">Mark as Complete</button>`;
+        }
+        
+        function getIconForCategory(category) {
+            if (category === 'mind') return 'fa-brain';
+            if (category === 'body') return 'fa-running';
+            return 'fa-leaf';
+        }
+        
+        function updateStreakDisplay() {
+            streakHeader.innerHTML = `Your Current Streak: <span class="streak-count">${dailyState.streak} days 🔥</span>`;
+        }
+
+        // --- 4. EVENT HANDLERS ---
+        tasksContainer.addEventListener('click', (e) => {
+            const button = e.target.closest('.task-complete-btn');
+            if (!button) return;
+
+            const card = e.target.closest('.task-card');
+            const category = card.dataset.category;
+            
+            // For modal tasks, we mark as complete after it's done
+            if (dailyState.tasks[category].actionType !== 'modal') {
+                markTaskAsComplete(category);
+            }
+        });
+
+        // Breathing Modal Logic
+        const breathingModal = document.getElementById('breathingModal');
+        breathingModal.addEventListener('show.bs.modal', () => {
+            const instruction = document.getElementById('breathing-instruction');
+            const cycle = ['Breathe In...', 'Hold...', 'Breathe Out...', 'Hold...'];
+            let i = 0;
+            instruction.textContent = cycle[i];
+            
+            const interval = setInterval(() => {
+                i = (i + 1) % cycle.length;
+                instruction.textContent = cycle[i];
+            }, 4000); // Change text every 4 seconds (matches half of the animation)
+
+            breathingModal.addEventListener('hide.bs.modal', () => {
+                clearInterval(interval);
+                markTaskAsComplete('mind');
+            }, { once: true });
+        });
+        
+        function markTaskAsComplete(category) {
+            if (dailyState.tasks[category].completed) return; // Don't run if already done
+            
+            dailyState.tasks[category].completed = true;
+            
+            // Check if all are complete to update streak
+            const allDone = Object.values(dailyState.tasks).every(t => t.completed);
+            if (allDone) {
+                const today = new Date();
+                const yesterday = new Date(today);
+                yesterday.setDate(today.getDate() - 1);
+
+                if (dailyState.lastCompleted === yesterday.toDateString()) {
+                    dailyState.streak++; // Continue streak
+                } else if (dailyState.lastCompleted !== today.toDateString()) {
+                    dailyState.streak = 1; // Start a new streak
+                }
+                dailyState.lastCompleted = today.toDateString();
+            }
+            
+            localStorage.setItem('wellnessJourney', JSON.stringify(dailyState));
+            renderTasks();
+        }
+
+        // --- INITIAL RENDER ---
+        renderTasks();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Appointment | HerHealth+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- FONT IMPORTS (Same as homepage) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- BOOTSTRAP CSS & FONT AWESOME (Same as homepage) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  
+  <!-- YOUR STYLESHEET -->
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+  <!-- IDENTICAL HEADER FOR CONSISTENCY -->
+  <header class="primary-header animated-item">
+    <h1>HerHealth+</h1>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="checker.html">Symptom Checker</a>
+      <a href="appointment.html">Book Appointment</a>
+    </nav>
+  </header>
+
+  <main class="container my-5">
+    <!-- A wrapper for the form with our new styles -->
+    <div class="form-container animated-item" style="animation-delay: 0.2s;">
+      <h2>Book a Doctor Appointment</h2>
+      <p class="text-center text-muted mb-4">Fill out the form below to schedule your visit.</p>
+      
+      <form id="appointmentForm">
+        <div class="form-group">
+          <label for="name">Your Name:</label>
+          <input type="text" id="name" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label for="department">Select Department:</label>
+          <select id="department" class="form-select" required>
+            <option value="" disabled selected>-- Choose a department --</option>
+            <option value="Gynecology">Gynecology</option>
+            <option value="Oncology">Oncology</option>
+            <option value="Fertility">Fertility</option>
+            <option value="General">General Health</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="doctor">Select Doctor:</label>
+          <select id="doctor" class="form-select" required>
+            <option value="" disabled selected>-- First, choose a department --</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="date">Preferred Date:</label>
+          <input type="date" id="date" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label for="time">Preferred Time:</label>
+          <input type="time" id="time" class="form-control" required>
+        </div>
+
+        <!-- The button now uses our brand style -->
+        <button type="submit" class="btn btn-brand w-100 mt-4">Book Appointment</button>
+      </form>
+
+      <!-- The confirmation message will appear here -->
+      <div id="confirmation" class="confirmation-message mt-4"></div>
+    </div>
+  </main>
+
+  <!-- IDENTICAL FOOTER FOR CONSISTENCY -->
+  <footer class="primary-footer">
+    <p>© 2025 HerHealth+. All rights reserved.</p>
+  </footer>
+
+  <!-- YOUR JAVASCRIPT (No changes needed here, it will work perfectly) -->
+  <script>
+    const doctorMap = {
+      Gynecology: ["Dr. Aarti Mehra", "Dr. Radhika Singh"],
+      Oncology: ["Dr. Sameer Verma", "Dr. Neha Bansal"],
+      Fertility: ["Dr. Pooja Yadav", "Dr. Amratansh Gupta"],
+      General: ["Dr. Ramesh Kumar", "Dr. Preeti Sharma"]
+    };
+
+    const deptSelect = document.getElementById("department");
+    const doctorSelect = document.getElementById("doctor");
+
+    deptSelect.addEventListener("change", () => {
+      const selectedDept = deptSelect.value;
+      doctorSelect.innerHTML = '<option value="">-- Choose a doctor --</option>';
+      if (doctorMap[selectedDept]) {
+        doctorMap[selectedDept].forEach(doctor => {
+          const option = document.createElement("option");
+          option.value = doctor;
+          option.textContent = doctor;
+          doctorSelect.appendChild(option);
+        });
+      }
+    });
+
+    document.getElementById("appointmentForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const dept = document.getElementById("department").value;
+      const doctor = document.getElementById("doctor").value;
+      const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
+
+      const confirmationDiv = document.getElementById("confirmation");
+      confirmationDiv.innerHTML = `✅ Appointment booked for <strong>${name}</strong> with <strong>${doctor}</strong> on <strong>${date}</strong> at <strong>${time}</strong>.`;
+      confirmationDiv.style.display = 'block'; // Make it visible
+
+      document.getElementById("appointmentForm").reset();
+      doctorSelect.innerHTML = '<option value="">-- First, choose a department --</option>';
+    });
+  </script>
+</body>
+</html>

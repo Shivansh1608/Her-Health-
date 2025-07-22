@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Symptom Checker | HerHealth+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- FONT IMPORTS & STYLESHEETS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  
+  <style>
+    /* 
+    ============================================
+    ALL STYLES FOR THE HERHEALTH+ APPLICATION
+    ============================================
+    */
+
+    /* --- 1. THEME: A Bolder, More Refined Palette --- */
+    :root {
+      --clr-primary: #E60073;    /* Your vibrant magenta */
+      --clr-primary-light: #FF4DA6; /* Your lighter pink */
+      --clr-secondary: #6A1B9A;  /* A deep, complementary purple */
+      --clr-bg: #FFF5F7;        /* A very subtle pink background */
+      --clr-surface: #FFFFFF;    /* White for cards and surfaces */
+      --clr-text: #4A4A4A;      /* Soft dark gray for text */
+      --clr-heading: #333333;    /* Almost black for strong headings */
+
+      --ff-heading: 'Montserrat', sans-serif;
+      --ff-body: 'Poppins', sans-serif;
+
+      --shadow-md: 0 8px 25px rgba(230, 0, 115, 0.15);
+      --shadow-lg: 0 12px 35px rgba(230, 0, 115, 0.25);
+      --border-radius: 12px;
+      --transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    /* --- 2. BASE STYLES & NEW ANIMATIONS --- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--ff-body);
+      background-color: var(--clr-bg);
+      color: var(--clr-text);
+      min-height: 100vh;
+      overflow-x: hidden; /* Prevent horizontal scroll from animations */
+    }
+
+    @keyframes slideUpFadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animated-item {
+        animation: slideUpFadeIn 0.6s ease-out both;
+    }
+
+    /* --- 3. HEADER & NAVIGATION --- */
+    .primary-header {
+      background: linear-gradient(90deg, var(--clr-secondary), var(--clr-primary));
+      color: white;
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .primary-header h1 { font-family: var(--ff-heading); font-size: 1.8rem; }
+    .main-nav a {
+      margin-left: 25px;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      padding-bottom: 8px;
+      transition: var(--transition);
+    }
+    .main-nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--clr-primary-light);
+      border-radius: 5px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease-in-out;
+    }
+    .main-nav a:hover { color: #fff; }
+    .main-nav a:hover::after { transform: scaleX(1); }
+
+    /* --- 5. BUTTONS (Primary and Outline Styles) --- */
+    .btn-brand, .btn-brand-outline {
+      font-weight: 600;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      transition: var(--transition);
+      box-shadow: var(--shadow-md);
+      text-decoration: none;
+      border: 2px solid transparent;
+    }
+    .btn-brand:hover, .btn-brand-outline:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+    .btn-brand {
+      background: linear-gradient(90deg, var(--clr-primary), var(--clr-primary-light));
+      color: white;
+    }
+    .btn-brand-outline {
+      background-color: transparent;
+      border-color: var(--clr-primary);
+      color: var(--clr-primary);
+    }
+    .btn-brand-outline:hover {
+      background-color: var(--clr-primary);
+      color: white;
+    }
+
+    /* --- 6. FOOTER --- */
+    .primary-footer {
+        text-align: center;
+        margin-top: 5rem;
+        padding: 2rem;
+        color: #888;
+    }
+
+    /* 
+    ============================================
+    8. SYMPTOM CHECKER STYLES
+    ============================================
+    */
+
+    /* Hide the actual checkbox input */
+    .symptom-checkbox {
+      display: none;
+    }
+
+    /* Style the label to look like a clickable card */
+    .symptom-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+      background-color: var(--clr-surface);
+      border: 2px solid #f0e6e8;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      height: 100%;
+      position: relative; /* For the checkmark */
+    }
+
+    .symptom-card .icon {
+      font-size: 1.8rem;
+      color: var(--clr-secondary);
+      margin-bottom: 1rem;
+      transition: var(--transition);
+    }
+
+    .symptom-card span {
+      font-weight: 500;
+      color: var(--clr-heading);
+      text-align: center;
+    }
+
+    /* Hover micro-interaction */
+    .symptom-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--clr-primary-light);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* --- THE 'SELECTED' STATE --- */
+    .symptom-checkbox:checked + .symptom-card {
+      background-color: var(--clr-primary);
+      border-color: var(--clr-primary);
+      color: white;
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .symptom-checkbox:checked + .symptom-card .icon,
+    .symptom-checkbox:checked + .symptom-card span {
+      color: white;
+    }
+
+    /* Add an animated checkmark when selected */
+    .symptom-card::after {
+      content: '\f00c'; /* Font Awesome checkmark icon */
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.2rem;
+      color: white;
+      background-color: var(--clr-primary-light);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      transform: scale(0);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .symptom-checkbox:checked + .symptom-card::after {
+      transform: scale(1);
+    }
+
+    /* 
+    ============================================
+    9. EFFECTIVE SYMPTOM CHECKER STYLES
+    ============================================
+    */
+
+    /* --- Custom Tab Styles --- */
+    .symptom-tabs {
+      border-bottom: 2px solid #EAE0E0;
+    }
+    .symptom-tabs .nav-link {
+      color: var(--clr-text);
+      font-weight: 600;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 0.75rem 1.5rem;
+    }
+    .symptom-tabs .nav-link.active,
+    .symptom-tabs .nav-link:hover {
+      color: var(--clr-primary);
+      border-color: var(--clr-primary);
+      background-color: transparent;
+    }
+
+    /* --- Summary Box --- */
+    .summary-container {
+      background-color: var(--clr-surface);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid #f0e6e8;
+    }
+    .summary-container h4 {
+      font-family: var(--ff-heading);
+      color: var(--clr-secondary);
+      border-bottom: 1px solid #EAE0E0;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .summary-list {
+      list-style: none;
+      padding-left: 0;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .summary-list li {
+      padding: 0.5rem 0;
+      font-weight: 500;
+    }
+    .summary-list li .fa-check-circle {
+      color: var(--clr-primary);
+    }
+    .summary-list .placeholder {
+      color: #999;
+      font-style: italic;
+    }
+
+    /* --- Enhanced Result Box --- */
+    .result-box {
+      display: none;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 1.5rem 2rem;
+      background-color: var(--clr-surface);
+      border-left: 5px solid var(--clr-secondary);
+      box-shadow: var(--shadow-md);
+      border-radius: var(--border-radius);
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-align: left;
+      animation: slideUpFadeIn 0.5s ease-out;
+    }
+    .result-box.active {
+        display: block;
+    }
+    .result-box .disclaimer {
+      background-color: #FFF9C4; /* Soft yellow */
+      color: #795548;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #FFF176;
+    }
+    .result-box .disclaimer i {
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="primary-header animated-item">
+    <h1>HerHealth+</h1>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="checker.html">Symptom Checker</a>
+      <a href="appointment.html">Book Appointment</a>
+    </nav>
+  </header>
+
+  <main class="container my-5">
+    <div class="text-center mb-5 animated-item" style="animation-delay: 0.2s;">
+      <h2 style="font-family: var(--ff-heading); font-size: 2.5rem;">Symptom Checker</h2>
+      <p class="lead mt-2">Select your symptoms to get a potential analysis. This is not a medical diagnosis.</p>
+    </div>
+
+    <div class="row gx-5">
+      <!-- Left side: Symptom Selection -->
+      <div class="col-lg-8">
+        <!-- TABS FOR ORGANIZATION -->
+        <ul class="nav nav-tabs symptom-tabs" id="symptomTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="hormonal-tab" data-bs-toggle="tab" data-bs-target="#hormonal" type="button" role="tab">Hormonal & Menstrual</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pain-tab" data-bs-toggle="tab" data-bs-target="#pain" type="button" role="tab">Pain & Discomfort</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="other-tab" data-bs-toggle="tab" data-bs-target="#other" type="button" role="tab">Other Symptoms</button>
+          </li>
+        </ul>
+        
+        <!-- TAB CONTENT -->
+        <div class="tab-content pt-4" id="symptomTabContent">
+          <!-- Hormonal & Menstrual Tab -->
+          <div class="tab-pane fade show active" id="hormonal" role="tabpanel">
+            <div class="row g-3" id="symptom-list-hormonal">
+              <!-- JS will populate this -->
+            </div>
+          </div>
+          <!-- Pain & Discomfort Tab -->
+          <div class="tab-pane fade" id="pain" role="tabpanel">
+            <div class="row g-3" id="symptom-list-pain">
+              <!-- JS will populate this -->
+            </div>
+          </div>
+          <!-- Other Symptoms Tab -->
+          <div class="tab-pane fade" id="other" role="tabpanel">
+            <div class="row g-3" id="symptom-list-other">
+              <!-- JS will populate this -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right side: Summary & Action -->
+      <div class="col-lg-4">
+        <div class="summary-container sticky-top">
+          <h4><i class="fas fa-clipboard-list me-2"></i>Selected Symptoms</h4>
+          <ul id="summary-list" class="summary-list">
+            <li class="placeholder">Your selections will appear here...</li>
+          </ul>
+          <button type="button" id="predictBtn" class="btn btn-brand w-100 mt-3 py-2">Analyze My Symptoms</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- RESULT BOX (Now hidden by default) -->
+    <div id="result" class="result-box mt-5"></div>
+  </main>
+
+  <footer class="primary-footer">
+    <p>© 2025 HerHealth+. All rights reserved.</p>
+  </footer>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // --- JAVASCRIPT LOGIC FOR THE SYMPTOM CHECKER ---
+    document.addEventListener('DOMContentLoaded', function() {
+        const symptoms = [
+            // Hormonal & Menstrual
+            { id: 'irregularPeriods', name: 'Irregular Periods', icon: 'fa-calendar-alt', category: 'hormonal' },
+            { id: 'heavyBleeding', name: 'Heavy Bleeding', icon: 'fa-tint', category: 'hormonal' },
+            { id: 'facialHair', name: 'Excess Facial/Body Hair', icon: 'fa-user-md', category: 'hormonal' },
+            { id: 'acne', name: 'Severe Acne', icon: 'fa-head-side-cough', category: 'hormonal' },
+            { id: 'moodSwings', name: 'Mood Swings', icon: 'fa-face-angry', category: 'hormonal' },
+            { id: 'weightGain', name: 'Unexplained Weight Gain', icon: 'fa-weight', category: 'hormonal' },
+            // Pain & Discomfort
+            { id: 'pelvicPain', name: 'Pelvic Pain', icon: 'fa-heartbeat', category: 'pain' },
+            { id: 'cramps', name: 'Severe Cramps', icon: 'fa-band-aid', category: 'pain' },
+            { id: 'painDuringIntercourse', name: 'Pain During Intercourse', icon: 'fa-bed', category: 'pain' },
+            { id: 'bloating', name: 'Persistent Bloating', icon: 'fa-wind', category: 'pain' },
+            // Other Symptoms
+            { id: 'hotFlashes', name: 'Hot Flashes', icon: 'fa-fire', category: 'other' },
+            { id: 'fatigue', name: 'Chronic Fatigue', icon: 'fa-battery-empty', category: 'other' },
+            { id: 'nightSweats', name: 'Night Sweats', icon: 'fa-moon', category: 'other' },
+            { id: 'headaches', name: 'Frequent Headaches', icon: 'fa-head-side-virus', category: 'other' },
+        ];
+
+        const conditions = {
+            pcos: {
+                name: 'Polycystic Ovary Syndrome (PCOS)',
+                relatedSymptoms: ['irregularPeriods', 'facialHair', 'weightGain', 'acne'],
+                description: 'PCOS is a hormonal disorder common among women of reproductive age. The combination of irregular periods, excess hair growth, and weight gain strongly suggests this. It can affect fertility and overall health.',
+                action: 'Book an Appointment with a Gynecologist'
+            },
+            endometriosis: {
+                name: 'Endometriosis',
+                relatedSymptoms: ['pelvicPain', 'heavyBleeding', 'cramps', 'painDuringIntercourse'],
+                description: 'This is a condition where tissue similar to the lining inside the uterus grows outside the uterus. Severe pain, especially during periods, is a key indicator.',
+                action: 'Discuss Pain Management with a Specialist'
+            },
+            menopause: {
+                name: 'Perimenopause / Menopause',
+                relatedSymptoms: ['hotFlashes', 'nightSweats', 'moodSwings', 'irregularPeriods'],
+                description: 'These symptoms are classic signs of the transition into menopause. Hormonal changes cause hot flashes, mood shifts, and changes in the menstrual cycle.',
+                action: 'Consult a Doctor about Hormonal Changes'
+            },
+            general: {
+                name: 'General Consultation Recommended',
+                relatedSymptoms: [], // Catch-all
+                description: 'Your combination of symptoms does not point to a single common condition but warrants a professional opinion. Please consult a doctor for a proper diagnosis.',
+                action: 'Find a General Physician'
+            }
+        };
+
+        const hormonalList = document.getElementById('symptom-list-hormonal');
+        const painList = document.getElementById('symptom-list-pain');
+        const otherList = document.getElementById('symptom-list-other');
+        const summaryList = document.getElementById('summary-list');
+        const predictBtn = document.getElementById('predictBtn');
+        const resultBox = document.getElementById('result');
+
+        function createSymptomCard(symptom) {
+            const col = document.createElement('div');
+            col.className = 'col-md-6';
+            col.innerHTML = `
+                <input type="checkbox" name="symptom" value="${symptom.id}" id="${symptom.id}" class="symptom-checkbox">
+                <label for="${symptom.id}" class="symptom-card">
+                    <i class="fas ${symptom.icon} icon"></i>
+                    <span>${symptom.name}</span>
+                </label>
+            `;
+            return col;
+        }
+
+        symptoms.forEach(symptom => {
+            const card = createSymptomCard(symptom);
+            if (symptom.category === 'hormonal') hormonalList.appendChild(card);
+            else if (symptom.category === 'pain') painList.appendChild(card);
+            else otherList.appendChild(card);
+        });
+
+        function updateSummary() {
+            const checkedSymptoms = document.querySelectorAll('.symptom-checkbox:checked');
+            summaryList.innerHTML = '';
+
+            if (checkedSymptoms.length === 0) {
+                summaryList.innerHTML = '<li class="placeholder">Your selections will appear here...</li>';
+            } else {
+                checkedSymptoms.forEach(checkbox => {
+                    const symptomName = checkbox.nextElementSibling.querySelector('span').textContent;
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-check-circle me-2"></i>${symptomName}`;
+                    summaryList.appendChild(li);
+                });
+            }
+        }
+
+        function predict() {
+            const checkedSymptoms = Array.from(document.querySelectorAll('.symptom-checkbox:checked')).map(cb => cb.value);
+            
+            if (checkedSymptoms.length < 2) {
+                resultBox.innerHTML = `
+                    <h4>Please Select At Least Two Symptoms</h4>
+                    <p>To provide a more accurate analysis, please select two or more symptoms you are experiencing.</p>
+                `;
+                resultBox.classList.add('active');
+                return;
+            }
+
+            let bestMatch = { id: 'general', score: 0 };
+
+            for (const conditionId in conditions) {
+                if (conditionId === 'general') continue;
+                const condition = conditions[conditionId];
+                const matchCount = condition.relatedSymptoms.filter(symptom => checkedSymptoms.includes(symptom)).length;
+                
+                if (matchCount > bestMatch.score) {
+                    bestMatch = { id: conditionId, score: matchCount };
+                }
+            }
+            
+            const finalCondition = conditions[bestMatch.id];
+            
+            resultBox.innerHTML = `
+                <h4>Potential Analysis: ${finalCondition.name}</h4>
+                <p>${finalCondition.description}</p>
+                <hr>
+                <div class="disclaimer">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Disclaimer:</strong> This is an informational tool and not a substitute for professional medical advice.
+                </div>
+                <a href="appointment.html" class="btn btn-brand-outline mt-3">${finalCondition.action}</a>
+            `;
+            resultBox.classList.add('active');
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        document.querySelectorAll('.symptom-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', updateSummary);
+        });
+
+        predictBtn.addEventListener('click', predict);
+    });
+
+    
+  </script>
+</body>
+</html>

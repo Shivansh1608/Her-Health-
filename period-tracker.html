@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Period & Fertility Tracker | HerHealth+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- FONT IMPORTS & STYLESHEETS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    /* 
+    ============================================
+    ALL STYLES FOR THE HERHEALTH+ APPLICATION
+    ============================================
+    */
+
+    /* --- 1. THEME & BASE STYLES --- */
+    :root {
+      --clr-primary: #E60073;
+      --clr-primary-light: #FF4DA6;
+      --clr-secondary: #6A1B9A;
+      --clr-bg: #FFF5F7;
+      --clr-surface: #FFFFFF;
+      --clr-text: #4A4A4A;
+      --clr-heading: #333333;
+      --ff-heading: 'Montserrat', sans-serif;
+      --ff-body: 'Poppins', sans-serif;
+      --shadow-md: 0 8px 25px rgba(230, 0, 115, 0.15);
+      --border-radius: 12px;
+      --transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    @keyframes slideUpFadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animated-item { animation: slideUpFadeIn 0.6s ease-out both; }
+    
+    /* --- HEADER, FOOTER, BUTTONS (From previous designs) --- */
+    .primary-header { background: linear-gradient(90deg, var(--clr-secondary), var(--clr-primary)); color: white; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .primary-header h1 { font-family: var(--ff-heading); font-size: 1.8rem; }
+    .main-nav a { margin-left: 25px; color: white; text-decoration: none; font-weight: 500; position: relative; padding-bottom: 8px; transition: var(--transition); }
+    .main-nav a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--clr-primary-light); border-radius: 5px; transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease-in-out; }
+    .main-nav a:hover { color: #fff; }
+    .main-nav a:hover::after { transform: scaleX(1); }
+    .primary-footer { text-align: center; margin-top: 5rem; padding: 2rem; color: #888; }
+    .btn-brand { background: linear-gradient(90deg, var(--clr-primary), var(--clr-primary-light)); color: white; border: none; font-weight: 600; padding: 0.8rem 2rem; border-radius: 50px; transition: var(--transition); box-shadow: var(--shadow-md); text-decoration: none; }
+    .btn-brand:hover { color: white; transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .form-control, .form-select { padding: 12px 15px; border: 2px solid #EAEAEA; border-radius: 8px; font-size: 1rem; font-family: var(--ff-body); transition: var(--transition); background-color: #fcfcfc; }
+    .form-control:focus, .form-select:focus { border-color: var(--clr-primary); box-shadow: 0 0 0 4px rgba(230, 0, 115, 0.1); outline: none; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; font-weight: 600; color: var(--clr-heading); margin-bottom: 0.5rem; }
+
+    /* 
+    ============================================
+    12. PERIOD TRACKER STYLES ("NEW & CRAZY")
+    ============================================
+    */
+
+    /* --- Ambient Background --- */
+    body {
+        transition: background 2s ease-in-out;
+    }
+    @keyframes follicular-bg { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
+    @keyframes fertile-bg { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
+    @keyframes luteal-bg { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
+    @keyframes menstruation-bg { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
+
+    .phase-follicular { background: linear-gradient(-45deg, #fce4ec, #f8bbd0, #e1bee7, #d1c4e9); background-size: 400% 400%; animation: follicular-bg 15s ease infinite; }
+    .phase-fertile { background: linear-gradient(-45deg, #ffccbc, #ffab91, #ff8a65, #ff7043); background-size: 400% 400%; animation: fertile-bg 12s ease infinite; }
+    .phase-luteal { background: linear-gradient(-45deg, #c5cae9, #9fa8da, #7986cb, #5c6bc0); background-size: 400% 400%; animation: luteal-bg 18s ease infinite; }
+    .phase-menstruation { background: linear-gradient(-45deg, #ef9a9a, #e57373, #ef9a9a, #fce4ec); background-size: 400% 400%; animation: menstruation-bg 20s ease infinite; }
+
+    /* --- Main Tracker Container --- */
+    .tracker-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+    #setup-screen {
+        max-width: 500px;
+        width: 100%;
+        background: var(--clr-surface);
+        padding: 2.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-md);
+    }
+    #tracker-screen {
+        display: none; /* Hidden by default */
+        width: 100%;
+        text-align: center;
+    }
+
+    /* --- Cycle Wheel --- */
+    #cycle-wheel {
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+        stroke-linecap: round;
+        animation: fadeIn 1s ease;
+    }
+    .wheel-bg {
+        fill: none;
+        stroke: #f0e6e8;
+        stroke-width: 35;
+    }
+    .phase-arc {
+        fill: none;
+        stroke-width: 35;
+        transition: stroke-dashoffset 1.5s cubic-bezier(0.5, 0, 0.5, 1);
+    }
+    .arc-menstruation { stroke: #e57373; }
+    .arc-follicular { stroke: #d1c4e9; }
+    .arc-fertile { stroke: #ffab91; }
+    .arc-luteal { stroke: #9fa8da; }
+    
+    .day-number {
+        font-family: var(--ff-body);
+        font-size: 10px;
+        fill: #aaa;
+    }
+    .day-number.is-phase-menstruation { fill: #b71c1c; font-weight: 600; }
+    .day-number.is-phase-fertile { fill: #e65100; font-weight: 600; }
+    .day-number.is-current-day {
+        font-size: 14px;
+        fill: var(--clr-primary);
+        font-weight: 700;
+        text-shadow: 0 0 5px white;
+    }
+    
+    /* --- Central Info Display --- */
+    .central-info .day-text {
+        font-size: 5rem;
+        font-family: var(--ff-heading);
+        font-weight: 700;
+        fill: var(--clr-heading);
+    }
+    .central-info .day-label {
+        font-size: 1.2rem;
+        fill: var(--clr-text);
+    }
+    .central-info .phase-text {
+        font-size: 1.3rem;
+        font-weight: 600;
+        fill: var(--clr-secondary);
+    }
+    
+    /* --- Legend --- */
+    .legend {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+    }
+    .legend-color {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="primary-header animated-item">
+    <h1>HerHealth+</h1>
+    <nav class="main-nav">
+      <a href="index.html">Back to Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="container my-5">
+    <div class="text-center mb-5 animated-item" style="animation-delay: 0.2s;">
+      <h2 style="font-family: var(--ff-heading); font-size: 2.5rem;">🩸 Period & Fertility Tracker</h2>
+    </div>
+    
+    <div class="tracker-container">
+      <!-- Screen 1: Initial Setup -->
+      <div id="setup-screen" class="animated-item" style="animation-delay: 0.3s;">
+        <h4 class="text-center mb-4" style="font-family: var(--ff-heading);">Let's Get Started</h4>
+        <form id="trackerForm">
+          <div class="form-group">
+            <label for="lastPeriod">Last Period Start Date:</label>
+            <input type="date" class="form-control" id="lastPeriod" required />
+          </div>
+          <div class="form-group">
+            <label for="cycleLength">Average Cycle Length (e.g., 28 days):</label>
+            <input type="number" class="form-control" id="cycleLength" value="28" min="20" max="45" required />
+          </div>
+          <button type="submit" class="btn btn-brand w-100">Start Tracking My Cycle</button>
+        </form>
+      </div>
+
+      <!-- Screen 2: The Live Tracker -->
+      <div id="tracker-screen">
+        <div id="current-status" class="mb-4">
+          <!-- Live status text will be inserted here -->
+        </div>
+        <svg id="cycle-wheel" viewBox="0 0 400 400"></svg>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-color" style="background: #e57373;"></span> Menstruation</div>
+          <div class="legend-item"><span class="legend-color" style="background: #d1c4e9;"></span> Follicular</div>
+          <div class="legend-item"><span class="legend-color" style="background: #ffab91;"></span> Fertile Window</div>
+          <div class="legend-item"><span class="legend-color" style="background: #9fa8da;"></span> Luteal</div>
+        </div>
+        <button id="reset-btn" class="btn btn-outline-secondary mt-4">Reset & Start Over</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="primary-footer">
+    © 2025 HerHealth+. All rights reserved.
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const setupScreen = document.getElementById('setup-screen');
+      const trackerScreen = document.getElementById('tracker-screen');
+      const form = document.getElementById('trackerForm');
+      const resetBtn = document.getElementById('reset-btn');
+      const wheelSVG = document.getElementById('cycle-wheel');
+      const currentStatusDiv = document.getElementById('current-status');
+
+      const SVG_NS = "http://www.w3.org/2000/svg";
+
+      // --- DATA & STATE MANAGEMENT ---
+      let cycleData = JSON.parse(localStorage.getItem("herHealthCycleData"));
+
+      function checkState() {
+        if (cycleData && cycleData.lastPeriodDate && cycleData.cycleLength) {
+          setupScreen.style.display = 'none';
+          trackerScreen.style.display = 'block';
+          renderTracker();
+        } else {
+          setupScreen.style.display = 'block';
+          trackerScreen.style.display = 'none';
+        }
+      }
+
+      // --- EVENT LISTENERS ---
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const lastPeriod = document.getElementById('lastPeriod').value;
+        const cycleLength = parseInt(document.getElementById('cycleLength').value);
+        
+        if (lastPeriod && cycleLength) {
+          cycleData = { lastPeriodDate: lastPeriod, cycleLength: cycleLength };
+          localStorage.setItem("herHealthCycleData", JSON.stringify(cycleData));
+          checkState();
+        }
+      });
+
+      resetBtn.addEventListener('click', () => {
+        if (confirm("Are you sure you want to reset your cycle data?")) {
+          localStorage.removeItem("herHealthCycleData");
+          cycleData = null;
+          document.body.className = ''; // Reset background
+          checkState();
+        }
+      });
+
+      // --- CORE RENDER FUNCTION ---
+      function renderTracker() {
+        const { lastPeriodDate, cycleLength } = cycleData;
+        const lastPeriod = new Date(lastPeriodDate);
+        const today = new Date();
+        
+        // Fix for timezone issues with date inputs
+        lastPeriod.setMinutes(lastPeriod.getMinutes() + lastPeriod.getTimezoneOffset());
+        today.setHours(0,0,0,0);
+
+        const diffTime = Math.abs(today - lastPeriod);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const currentDay = (diffDays % cycleLength) + 1;
+
+        // Determine Phases
+        const periodEnd = 5; // Assume 5 days
+        const fertileStart = cycleLength - 17;
+        const fertileEnd = cycleLength - 12;
+        const ovulationDay = cycleLength - 14;
+
+        let currentPhase = '';
+        let phaseDescription = '';
+        
+        if (currentDay <= periodEnd) {
+          currentPhase = 'Menstruation';
+          phaseDescription = 'Your period has started. Time to rest and be gentle with yourself.';
+          document.body.className = 'phase-menstruation';
+        } else if (currentDay > periodEnd && currentDay < fertileStart) {
+          currentPhase = 'Follicular Phase';
+          phaseDescription = 'Energy levels are rising as your body prepares for ovulation.';
+          document.body.className = 'phase-follicular';
+        } else if (currentDay >= fertileStart && currentDay <= fertileEnd) {
+          currentPhase = 'Fertile Window';
+          phaseDescription = `You are in your most fertile time. Ovulation is predicted around Day ${ovulationDay}.`;
+          document.body.className = 'phase-fertile';
+        } else {
+          currentPhase = 'Luteal Phase';
+          phaseDescription = 'Your body is preparing for the next cycle. You might experience PMS symptoms.';
+          document.body.className = 'phase-luteal';
+        }
+
+        currentStatusDiv.innerHTML = `<h3>${phaseDescription}</h3>`;
+        
+        // --- RENDER THE SVG WHEEL ---
+        wheelSVG.innerHTML = ''; // Clear previous render
+        const cx = 200, cy = 200, radius = 150;
+        
+        // Background circle
+        const bgCircle = document.createElementNS(SVG_NS, 'circle');
+        bgCircle.setAttribute('cx', cx);
+        bgCircle.setAttribute('cy', cy);
+        bgCircle.setAttribute('r', radius);
+        bgCircle.setAttribute('class', 'wheel-bg');
+        wheelSVG.appendChild(bgCircle);
+
+        // Draw phase arcs
+        const totalCircumference = 2 * Math.PI * radius;
+        let arcOffset = 0;
+
+        function drawArc(startDay, endDay, className) {
+            const arcLength = (endDay - startDay + 1) / cycleLength * totalCircumference;
+            const arc = document.createElementNS(SVG_NS, 'circle');
+            arc.setAttribute('cx', cx);
+            arc.setAttribute('cy', cy);
+            arc.setAttribute('r', radius);
+            arc.setAttribute('class', `phase-arc ${className}`);
+            arc.setAttribute('stroke-dasharray', `${arcLength} ${totalCircumference}`);
+            arc.setAttribute('transform', `rotate(${(startDay - 1) / cycleLength * 360 - 90} ${cx} ${cy})`);
+            // Animate drawing
+            arc.style.strokeDashoffset = totalCircumference;
+            setTimeout(() => { arc.style.strokeDashoffset = totalCircumference - arcLength; }, 100);
+            wheelSVG.appendChild(arc);
+        }
+
+        drawArc(1, periodEnd, 'arc-menstruation');
+        drawArc(periodEnd + 1, fertileStart - 1, 'arc-follicular');
+        drawArc(fertileStart, fertileEnd, 'arc-fertile');
+        drawArc(fertileEnd + 1, cycleLength, 'arc-luteal');
+
+        // Draw day numbers
+        for (let i = 1; i <= cycleLength; i++) {
+          const angle = (i / cycleLength) * 360 - 90;
+          const textX = cx + (radius) * Math.cos(angle * Math.PI / 180);
+          const textY = cy + (radius) * Math.sin(angle * Math.PI / 180);
+
+          const text = document.createElementNS(SVG_NS, 'text');
+          text.setAttribute('x', textX);
+          text.setAttribute('y', textY);
+          text.setAttribute('dy', '0.35em'); // Center vertically
+          text.setAttribute('text-anchor', 'middle');
+          text.textContent = i;
+          
+          let dayClass = 'day-number';
+          if (i <= periodEnd) dayClass += ' is-phase-menstruation';
+          if (i >= fertileStart && i <= fertileEnd) dayClass += ' is-phase-fertile';
+          if (i === currentDay) dayClass += ' is-current-day';
+          text.setAttribute('class', dayClass);
+
+          wheelSVG.appendChild(text);
+        }
+        
+        // Draw central info
+        const centralGroup = document.createElementNS(SVG_NS, 'g');
+        centralGroup.setAttribute('class', 'central-info');
+        
+        const dayText = document.createElementNS(SVG_NS, 'text');
+        dayText.setAttribute('x', cx);
+        dayText.setAttribute('y', cy - 15);
+        dayText.setAttribute('text-anchor', 'middle');
+        dayText.setAttribute('class', 'day-text');
+        dayText.textContent = currentDay;
+        
+        const dayLabel = document.createElementNS(SVG_NS, 'text');
+        dayLabel.setAttribute('x', cx);
+        dayLabel.setAttribute('y', cy + 15);
+        dayLabel.setAttribute('text-anchor', 'middle');
+        dayLabel.setAttribute('class', 'day-label');
+        dayLabel.textContent = `of ${cycleLength}`;
+        
+        const phaseText = document.createElementNS(SVG_NS, 'text');
+        phaseText.setAttribute('x', cx);
+        phaseText.setAttribute('y', cy + 45);
+        phaseText.setAttribute('text-anchor', 'middle');
+        phaseText.setAttribute('class', 'phase-text');
+        phaseText.textContent = currentPhase;
+
+        centralGroup.appendChild(dayText);
+        centralGroup.appendChild(dayLabel);
+        centralGroup.appendChild(phaseText);
+        wheelSVG.appendChild(centralGroup);
+      }
+
+      // Initial check on page load
+      checkState();
+    });
+  </script>
+</body>
+</html>

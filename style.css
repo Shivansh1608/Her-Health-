@@ -1,0 +1,251 @@
+/* 
+============================================
+VIBRANT & ANIMATED REDESIGN FOR HERHEALTH+
+============================================
+*/
+
+/* --- 1. THEME: A Bolder, More Refined Palette --- */
+:root {
+  --clr-primary: #E60073;    /* Your vibrant magenta */
+  --clr-primary-light: #FF4DA6; /* Your lighter pink */
+  --clr-secondary: #6A1B9A;  /* A deep, complementary purple */
+  --clr-bg: #FFF5F7;        /* A very subtle pink background */
+  --clr-surface: #FFFFFF;    /* White for cards and surfaces */
+  --clr-text: #4A4A4A;      /* Soft dark gray for text */
+  --clr-heading: #333333;    /* Almost black for strong headings */
+
+  --ff-heading: 'Montserrat', sans-serif;
+  --ff-body: 'Poppins', sans-serif;
+
+  --shadow-md: 0 8px 25px rgba(230, 0, 115, 0.15);
+  --shadow-lg: 0 12px 35px rgba(230, 0, 115, 0.25);
+  --border-radius: 12px;
+  --transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* --- 2. BASE STYLES & NEW ANIMATIONS --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--ff-body);
+  background-color: var(--clr-bg);
+  color: var(--clr-text);
+  min-height: 100vh;
+  overflow-x: hidden; /* Prevent horizontal scroll from animations */
+}
+
+@keyframes slideUpFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animated-item {
+    animation: slideUpFadeIn 0.6s ease-out both;
+}
+
+/* --- 3. HEADER & NAVIGATION --- */
+.primary-header {
+  background: linear-gradient(90deg, var(--clr-secondary), var(--clr-primary));
+  color: white;
+  padding: 1.25rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.primary-header h1 {
+  font-family: var(--ff-heading);
+  font-size: 1.8rem;
+}
+.main-nav a {
+  margin-left: 25px;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  padding-bottom: 8px;
+  transition: var(--transition);
+}
+.main-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--clr-primary-light);
+  border-radius: 5px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-in-out;
+}
+.main-nav a:hover {
+    color: #fff;
+}
+.main-nav a:hover::after {
+    transform: scaleX(1);
+}
+
+/* --- 4. FEATURE CARDS & ANIMATION --- */
+.feature-card {
+  background: var(--clr-surface);
+  border: 1px solid #f0e6e8;
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  transition: var(--transition);
+  opacity: 0; /* Start hidden for stagger animation */
+  animation: slideUpFadeIn 0.5s ease-out forwards;
+}
+
+/* Stagger animation for all 9 cards */
+.card-grid .col-lg-4:nth-child(1) .feature-card, .card-grid .col-md-6:nth-child(1) .feature-card { animation-delay: 0.2s; }
+.card-grid .col-lg-4:nth-child(2) .feature-card, .card-grid .col-md-6:nth-child(2) .feature-card { animation-delay: 0.3s; }
+.card-grid .col-lg-4:nth-child(3) .feature-card, .card-grid .col-md-6:nth-child(3) .feature-card { animation-delay: 0.4s; }
+.card-grid .col-lg-4:nth-child(4) .feature-card, .card-grid .col-md-6:nth-child(4) .feature-card { animation-delay: 0.5s; }
+.card-grid .col-lg-4:nth-child(5) .feature-card, .card-grid .col-md-6:nth-child(5) .feature-card { animation-delay: 0.6s; }
+.card-grid .col-lg-4:nth-child(6) .feature-card, .card-grid .col-md-6:nth-child(6) .feature-card { animation-delay: 0.7s; }
+.card-grid .col-lg-4:nth-child(7) .feature-card, .card-grid .col-md-6:nth-child(7) .feature-card { animation-delay: 0.8s; }
+.card-grid .col-lg-4:nth-child(8) .feature-card, .card-grid .col-md-6:n-th-child(8) .feature-card { animation-delay: 0.9s; }
+.card-grid .col-lg-4:nth-child(9) .feature-card, .card-grid .col-md-6:nth-child(9) .feature-card { animation-delay: 1.0s; }
+
+.feature-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--clr-primary);
+}
+.card-icon {
+  font-size: 2rem;
+  color: var(--clr-secondary);
+  margin-bottom: 1.5rem;
+  transition: var(--transition);
+}
+.feature-card:hover .card-icon {
+  color: var(--clr-primary);
+  transform: rotate(-10deg) scale(1.2);
+}
+.feature-card h4 {
+    font-family: var(--ff-body);
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--clr-heading);
+}
+.feature-card p {
+    flex-grow: 1;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* --- 5. BUTTONS (Primary and Outline Styles) --- */
+.btn-brand, .btn-brand-outline {
+  font-weight: 600;
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  transition: var(--transition);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+  border: 2px solid transparent;
+}
+.btn-brand:hover, .btn-brand-outline:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+/* Primary Button */
+.btn-brand {
+  background: linear-gradient(90deg, var(--clr-primary), var(--clr-primary-light));
+  color: white;
+}
+/* NEW: Outline Button */
+.btn-brand-outline {
+  background-color: transparent;
+  border-color: var(--clr-primary);
+  color: var(--clr-primary);
+}
+.btn-brand-outline:hover {
+  background-color: var(--clr-primary);
+  color: white;
+}
+
+/* --- 6. FOOTER --- */
+.primary-footer {
+    text-align: center;
+    margin-top: 5rem;
+    padding: 2rem;
+    color: #888;
+}
+
+/* 
+============================================
+7. FORM STYLES (For Appointment Page, etc.)
+============================================
+*/
+
+.form-container {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 2.5rem 3rem;
+  background-color: var(--clr-surface);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  border: 1px solid #f0e6e8;
+}
+
+.form-container h2 {
+  font-family: var(--ff-heading);
+  color: var(--clr-secondary);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: var(--clr-heading);
+  margin-bottom: 0.5rem;
+}
+
+/* Styling for all text inputs, selects, date, and time */
+.form-control,
+.form-select {
+  padding: 12px 15px;
+  border: 2px solid #EAEAEA;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: var(--ff-body);
+  transition: var(--transition);
+  background-color: #fcfcfc;
+}
+
+/* The FOCUS micro-interaction */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 4px rgba(230, 0, 115, 0.1);
+  outline: none; /* remove default blue outline */
+}
+
+/* Styling for the confirmation message */
+.confirmation-message {
+  display: none; /* Hidden by default */
+  background-color: #E8F5E9; /* A soft green */
+  color: #2E7D32; /* A dark, readable green */
+  border: 1px solid #A5D6A7;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  font-weight: 500;
+  animation: slideUpFadeIn 0.5s ease-out; /* Appears with an animation */
+}

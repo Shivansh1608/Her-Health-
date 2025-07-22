@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mental Wellness Quiz | HerHealth+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <!-- FONT IMPORTS & STYLESHEETS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    /* 
+    ============================================
+    SHARED STYLES (HEADER, FOOTER, ETC.)
+    ============================================
+    */
+    :root {
+      --clr-primary: #E60073;
+      --clr-primary-light: #FF4DA6;
+      --clr-secondary: #6A1B9A;
+      --clr-text: #4A4A4A;
+      --clr-heading: #333333;
+      --ff-heading: 'Montserrat', sans-serif;
+      --ff-body: 'Poppins', sans-serif;
+      --shadow-md: 0 8px 25px rgba(230, 0, 115, 0.15);
+      --border-radius: 12px;
+      --transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    @keyframes slideUpFadeIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    .animated-item { animation: slideUpFadeIn 0.6s ease-out both; }
+    .primary-header { background: linear-gradient(90deg, var(--clr-secondary), var(--clr-primary)); color: white; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .primary-header h1 { font-family: var(--ff-heading); font-size: 1.8rem; }
+    .main-nav a { margin-left: 25px; color: white; text-decoration: none; font-weight: 500; }
+    .primary-footer { text-align: center; margin-top: 5rem; padding: 2rem; color: #888; background: transparent; }
+    .btn-brand-outline { background-color: transparent; border: 2px solid var(--clr-primary); color: var(--clr-primary); font-weight: 600; padding: 0.8rem 2rem; border-radius: 50px; transition: var(--transition); box-shadow: var(--shadow-md); text-decoration: none; }
+    .btn-brand-outline:hover { background-color: var(--clr-primary); color: white; transform: translateY(-3px); }
+
+    /* 
+    ============================================
+    13. MENTAL WELLNESS QUIZ STYLES
+    ============================================
+    */
+    
+    /* --- Soothing Animated Background --- */
+    body {
+        transition: background 2s ease-in-out;
+        background: linear-gradient(-45deg, #e0eafc, #cfdef3, #e0eafc, #fefefe);
+        background-size: 400% 400%;
+        animation: calming-bg 25s ease infinite;
+    }
+    @keyframes calming-bg { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
+
+    .quiz-container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* --- Blooming Flower Progress Bar --- */
+    .progress-flower {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 2rem;
+    }
+    .petal {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: #d1c4e9;
+      border-radius: 20px 0;
+      opacity: 0.2;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform-origin: bottom right;
+    }
+    .petal.bloomed { opacity: 1; }
+    .petal:nth-child(1) { transform: rotate(0deg); }
+    .petal:nth-child(2) { transform: rotate(60deg); }
+    .petal:nth-child(3) { transform: rotate(120deg); }
+    .petal:nth-child(4) { transform: rotate(180deg); }
+    .petal:nth-child(5) { transform: rotate(240deg); }
+    .petal:nth-child(6) { transform: rotate(300deg); }
+    .flower-center {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: #fdd835;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* --- Question & Answer Styles --- */
+    #quiz-question-container {
+      text-align: center;
+      transition: opacity 0.3s ease;
+    }
+    .question-text {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--clr-heading);
+      margin-bottom: 2rem;
+      min-height: 80px;
+    }
+    .answer-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .answer-btn {
+      background: white;
+      border: 2px solid #e0eafc;
+      border-radius: var(--border-radius);
+      padding: 1.5rem 1rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .answer-btn:hover {
+      transform: translateY(-5px);
+      border-color: var(--clr-primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* --- Result Card --- */
+    #quiz-result-container {
+      display: none;
+      background: white;
+      padding: 2.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+    .result-title {
+      font-family: var(--ff-heading);
+      color: var(--clr-secondary);
+      font-size: 2rem;
+    }
+    .result-description {
+      font-size: 1.1rem;
+      margin: 1rem 0 2rem;
+    }
+    .resources-list {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+      max-width: 400px;
+      margin: 1.5rem auto;
+    }
+    .resources-list li {
+      background: var(--clr-bg, #FFF5F7);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+    .resources-list a {
+      text-decoration: none;
+      color: var(--clr-primary);
+      font-weight: 500;
+    }
+    .resources-list a:hover { text-decoration: underline; }
+    .disclaimer { font-size: 0.8rem; color: #999; margin-top: 2rem; }
+  </style>
+</head>
+<body>
+
+  <header class="primary-header animated-item">
+    <h1>HerHealth+</h1>
+    <nav class="main-nav">
+      <a href="index.html">⬅ Back to Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="container my-5">
+    <div class="text-center mb-4 animated-item" style="animation-delay: 0.2s;">
+      <h2 style="font-family: var(--ff-heading); font-size: 2.5rem;">🧘 Mental Wellness Self-Check</h2>
+      <p class="lead mt-2">A gentle moment to connect with your feelings.</p>
+    </div>
+
+    <div class="quiz-container animated-item" style="animation-delay: 0.3s;">
+      <!-- The quiz will be rendered here by JavaScript -->
+      <div id="quiz-progress-container">
+        <div class="progress-flower">
+          <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+          <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+          <div class="flower-center"></div>
+        </div>
+      </div>
+
+      <div id="quiz-question-container">
+        <!-- Questions will be dynamically inserted here -->
+      </div>
+      
+      <div id="quiz-result-container">
+        <!-- The final result will be shown here -->
+      </div>
+    </div>
+  </main>
+
+  <footer class="primary-footer">
+    © 2025 HerHealth+. All rights reserved.
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const questions = [
+        { text: "Over the last 2 weeks, how often have you felt tired or had little energy?", scorePoints: [3, 2, 1, 0] },
+        { text: "How often have you had trouble falling or staying asleep, or sleeping too much?", scorePoints: [3, 2, 1, 0] },
+        { text: "How often have you felt little interest or pleasure in doing things you usually enjoy?", scorePoints: [3, 2, 1, 0] },
+        { text: "How often have you been feeling nervous, anxious, or on edge?", scorePoints: [3, 2, 1, 0] },
+        { text: "How often have you had trouble relaxing?", scorePoints: [3, 2, 1, 0] },
+        { text: "How often have you been easily annoyed or irritable?", scorePoints: [3, 2, 1, 0] },
+      ];
+      const answerOptions = ["Often", "Sometimes", "Rarely", "Never"];
+
+      const progressContainer = document.getElementById('quiz-progress-container');
+      const questionContainer = document.getElementById('quiz-question-container');
+      const resultContainer = document.getElementById('quiz-result-container');
+      const petals = document.querySelectorAll('.petal');
+
+      let currentQuestionIndex = 0;
+      let score = 0;
+
+      function renderQuestion() {
+        if (currentQuestionIndex >= questions.length) {
+          showResult();
+          return;
+        }
+
+        // Update progress flower
+        petals.forEach((petal, index) => {
+          if (index < currentQuestionIndex) {
+            petal.classList.add('bloomed');
+          }
+        });
+
+        const question = questions[currentQuestionIndex];
+        questionContainer.innerHTML = `
+          <p class="question-text">${question.text}</p>
+          <div class="answer-options">
+            ${answerOptions.map((option, index) => `
+              <button class="answer-btn" data-score="${question.scorePoints[index]}">${option}</button>
+            `).join('')}
+          </div>
+        `;
+
+        document.querySelectorAll('.answer-btn').forEach(button => {
+          button.addEventListener('click', handleAnswerClick);
+        });
+      }
+
+      function handleAnswerClick(event) {
+        score += parseInt(event.target.dataset.score);
+        currentQuestionIndex++;
+        
+        // Add a fade out/in effect for a smoother transition
+        questionContainer.style.opacity = '0';
+        setTimeout(() => {
+          renderQuestion();
+          questionContainer.style.opacity = '1';
+        }, 300);
+      }
+
+      function showResult() {
+        progressContainer.style.display = 'none';
+        questionContainer.style.display = 'none';
+        resultContainer.style.display = 'block';
+
+        let resultHTML = '';
+        if (score <= 5) {
+          resultHTML = `
+            <h3 class="result-title">Feeling Balanced</h3>
+            <p class="result-description">Your responses suggest you're maintaining a good sense of mental balance. Continue to prioritize self-care and stay connected with what brings you joy.</p>
+            <h4>Helpful Habits:</h4>
+            <ul class="resources-list">
+              <li><a href="#" target="_blank">Practice Daily Gratitude</a></li>
+              <li><a href="#" target="_blank">Maintain a Regular Sleep Schedule</a></li>
+            </ul>
+          `;
+        } else if (score <= 11) {
+          resultHTML = `
+            <h3 class="result-title">Signs of Mild Stress</h3>
+            <p class="result-description">It seems you may be experiencing some mild stress or emotional tension. These feelings are common. Taking small, gentle steps can make a significant difference.</p>
+            <h4>Consider Exploring:</h4>
+            <ul class="resources-list">
+              <li><a href="#" target="_blank">Guided 5-Minute Meditation</a></li>
+              <li><a href="#" target="_blank">Simple Breathing Exercises</a></li>
+              <li><a href="appointment.html">Talk to a Wellness Coach</a></li>
+            </ul>
+          `;
+        } else {
+          resultHTML = `
+            <h3 class="result-title">Time for Self-Care</h3>
+            <p class="result-description">Your answers indicate you might be under significant emotional stress. It's important to be gentle with yourself and acknowledge these feelings. Reaching out for support is a sign of strength.</p>
+            <h4>Recommended Next Steps:</h4>
+            <ul class="resources-list">
+              <li><a href="#" target="_blank">Understanding Anxiety & Stress</a></li>
+              <li><a href="appointment.html" class="fw-bold">Book an Appointment with a Professional</a></li>
+              <li><a href="#" target="_blank">Journaling for Mental Clarity</a></li>
+            </ul>
+          `;
+        }
+        
+        resultContainer.innerHTML = resultHTML + `<p class="disclaimer">This is a self-check tool, not a medical diagnosis. Please consult a healthcare professional for a formal assessment.</p>`;
+      }
+
+      // Start the quiz
+      renderQuestion();
+    });
+  </script>
+</body>
+</html>
